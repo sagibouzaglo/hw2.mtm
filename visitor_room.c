@@ -19,7 +19,7 @@ Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge
 }
 
 Result reset_challenge_activity(ChallengeActivity *activity){
-    if( (activity == NULL) ) {
+    if (activity == NULL) {
         return NULL_PARAMETER;
     }
     activity->challenge = NULL;
@@ -33,11 +33,11 @@ Result init_visitor(Visitor *visitor, char *name, int id){
         return NULL_PARAMETER;
     }
     visitor->visitor_name = malloc(sizeof(char)*(strlen(name)+1));
-    if( (visitor->visitor_name == NULL) ) {
+    if (visitor->visitor_name == NULL) {
         return MEMORY_PROBLEM;
     }
     visitor->room_name = malloc(sizeof(char*));
-    if( (visitor->room_name == NULL) ) {
+    if (visitor->room_name == NULL) {
         return MEMORY_PROBLEM;
     }
     strcpy(visitor->visitor_name,name);
@@ -49,7 +49,7 @@ Result init_visitor(Visitor *visitor, char *name, int id){
 }
 
 Result reset_visitor(Visitor *visitor){
-    if( (visitor == NULL) ) {
+    if(visitor == NULL) {
         return NULL_PARAMETER;
     }
     visitor->visitor_id = 0;
@@ -78,7 +78,7 @@ Result init_room(ChallengeRoom *room, char *name, int num_challenges){
 }
 
 Result reset_room(ChallengeRoom *room){
-    if( (room == NULL) ) {
+    if (room == NULL) {
         return NULL_PARAMETER;
     }
     room->num_of_challenges = 0;
@@ -90,7 +90,7 @@ Result reset_room(ChallengeRoom *room){
 }
 
 Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *places) {
-    if ((room == NULL)) {
+    if (room == NULL) {
         return NULL_PARAMETER;
     }
     int counter = 0;
@@ -114,7 +114,7 @@ Result change_room_name(ChallengeRoom *room, char *new_name){
         return NULL_PARAMETER;
     }
     room->name = malloc(sizeof(char)*(strlen(new_name)+1));
-    if( (room->name == NULL) ) {
+    if (room->name == NULL) {
         return MEMORY_PROBLEM;
     }
     return OK;
@@ -145,13 +145,13 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     for(int i=0; i< (room->num_of_challenges) ; ++i){
         if(level!=All_Levels) {
             if((room -> challenges +i )->challenge->level==level){
-                if(strcmp((room->challenges+i)->challenge),challenge)<0){
-                    *challenge=(room->challenges+i)->challenge;
+                if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
+                    *challenge=*(room->challenges+i)->challenge;
                 }
             }
             else{
-                if(strcmp((room->challenges+i)->challenge),challenge)<0){
-                    *challenge=(room->challenges+i)->challenge;
+                if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
+                    *challenge=*(room->challenges+i)->challenge;
                 }
             }
         }
