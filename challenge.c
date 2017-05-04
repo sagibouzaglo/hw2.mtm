@@ -35,7 +35,6 @@ Result reset_challenge(Challenge *challenge)
     } else {
         free(challenge->name);
         memset(challenge, 0, sizeof(*challenge));
-        
     }
     return OK;
 }
