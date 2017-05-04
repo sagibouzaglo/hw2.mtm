@@ -27,7 +27,6 @@
 
 /* Begin PBXFileReference section */
 		24E16CC61EBB67A1001FF479 /* hw2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hw2; sourceTree = BUILT_PRODUCTS_DIR; };
-		24E16CEA1EBB689E001FF479 /* visitor_room.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = visitor_room.h; sourceTree = "<group>"; };
 		24E16CF01EBB6E34001FF479 /* challenge_room_system_fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = challenge_room_system_fields.h; sourceTree = SOURCE_ROOT; };
 		24E16CF11EBB6E34001FF479 /* challenge_system_test_1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = challenge_system_test_1.c; sourceTree = SOURCE_ROOT; };
 		24E16CF21EBB6E34001FF479 /* challenge_system.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = challenge_system.c; sourceTree = SOURCE_ROOT; };
@@ -80,7 +79,6 @@
 				24E16CF71EBB6E34001FF479 /* system_additional_types.h */,
 				24E16CF81EBB6E34001FF479 /* visitor_room.c */,
 				24E16CF91EBB6E34001FF479 /* visitor_room.h */,
-				24E16CEA1EBB689E001FF479 /* visitor_room.h */,
 			);
 			path = hw2;
 			sourceTree = "<group>";
