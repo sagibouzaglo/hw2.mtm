@@ -140,7 +140,15 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     }
     int places=0;
     num_of_free_places_for_level(room,level,&places);
+
     if(places < 1) return NO_AVAILABLE_CHALLENGES;
+
+    Challenge *challenge = room->challenges->challenge;
+
+    char room_name; /* Maybe we need a pointer here ?? */
+    if(room_of_visitor(visitor, **room_name) != NOT_IN_ROOM)
+        return ALREADY_IN_ROOM;
+
     Challenge *challenge = room->challenges->challenge;
     for(int i=0; i< (room->num_of_challenges) ; ++i){
         if(level!=All_Levels) {
@@ -149,13 +157,14 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
                     *challenge=*(room->challenges+i)->challenge;
                 }
             }
-            else{
-                if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
-                    *challenge=*(room->challenges+i)->challenge;
-                }
+        }
+        else{
+            if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
+                *challenge=*(room->challenges+i)->challenge;
             }
         }
     }
+    
 
 }
 
