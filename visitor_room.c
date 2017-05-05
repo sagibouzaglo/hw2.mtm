@@ -124,11 +124,12 @@ Result room_of_visitor(Visitor *visitor, char **room_name){
     if( (visitor == NULL) || (room_name == NULL) ) {
         return NULL_PARAMETER;
     }
-    *room_name=malloc(sizeof(char)*(strlen(visitor->*room_name)+1));
-    if( (visitor->*room_name == NULL) ) {
+    *room_name=malloc(sizeof(char)*(strlen(*visitor->room_name)+1));/* moved the D reference from "room name" to visitor - sagi*/
+    if (visitor->room_name == NULL) { /* removed the D reference here, it gave us syntax error -sagi*/
         return MEMORY_PROBLEM;
     }
     if(*visitor->room_name == NULL) return NOT_IN_ROOM;
+    return OK; /*if it doesn't enter all the "if"s we need a return - sagi*/
 }
 
 Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time)
@@ -145,11 +146,13 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
 
     Challenge *challenge = room->challenges->challenge;
 
-    char room_name; /* Maybe we need a pointer here ?? */
-    if(room_of_visitor(visitor, **room_name) != NOT_IN_ROOM)
+    char** room_name; /* Maybe we need a pointer here ?? */
+    /* i changed it to array of pointers, now the call to the 
+     function below works well - sagi*/
+    if(room_of_visitor(visitor, room_name) != NOT_IN_ROOM)
         return ALREADY_IN_ROOM;
 
-    Challenge *challenge = room->challenges->challenge;
+    Challenge *challenge = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
     for(int i=0; i< (room->num_of_challenges) ; ++i){
         if(level!=All_Levels) {
             if((room -> challenges +i )->challenge->level==level){
