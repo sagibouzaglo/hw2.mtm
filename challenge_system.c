@@ -6,7 +6,6 @@
 
 
 #include "challenge_system.h"
-#include "challenge_room_system_fields.h"
 
 #define ROW_LENGTH 51
 
@@ -31,7 +30,6 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     strcpy(*sys->(*name),buffer);
     
     return OK;
-}
 
 
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
@@ -63,3 +61,4 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name);
 
 
 #endif // CHALLENGE_SYSTEM_H_
+}

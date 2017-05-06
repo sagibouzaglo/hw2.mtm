@@ -4,9 +4,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "visitor_room.h"
-#include "challenge.h"
 
+#include "visitor_room.h"
 
 Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge)
 {
@@ -170,16 +169,14 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     for(int i=0; i< (room->num_of_challenges) ; ++i){
         if(level!=All_Levels) {
             if((room -> challenges +i )->challenge->level==level){
-                if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
-                    *ChallengeToVisitor=*(room->challenges+i)->challenge;
-                    j=i;
+                if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
+                    *challenge=*(room->challenges+i)->challenge;
                 }
             }
         }
         else{
-            if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
-                *ChallengeToVisitor=*(room->challenges+i)->challenge;
-                j=i;
+            if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
+                *challenge=*(room->challenges+i)->challenge;
             }
         }
     }
@@ -187,8 +184,8 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     return OK; /*if it doesn't enter all the "if"s we need a return - sagi*/
 }
 
-Result visitor_quit_room(Visitor *visitor, int quit_time)
-{
+Result visitor_quit_room(Visitor *visitor, int quit_time){
+
     if (visitor == NULL){
         return NULL_PARAMETER;
     } else if(room_of_visitor(visitor,room)== NOT_IN_ROOM) {
