@@ -147,50 +147,62 @@ Result room_of_visitor(Visitor *visitor, char **room_name)
  the required level. assume all names are different. */
 Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time)
 {
-    if( (visitor == NULL) || (room == NULL) ) {
-        return NULL_PARAMETER;
-    }
-    int places=0;
-    num_of_free_places_for_level(room,level,&places);
-
-    if(places < 1) return NO_AVAILABLE_CHALLENGES;
-
-    Challenge *challenge = room->challenges->challenge;
-
-    char** room_name = &room->name; /* Maybe we need a pointer here ?? */
-    /* i changed it to array of pointers, now the call to the 
-     function below works well. also i inisialised it to the room name,
-     need to check it though- sagi*/
-    if(room_of_visitor(visitor, room_name) != NOT_IN_ROOM)
-        return ALREADY_IN_ROOM;
-
-    Challenge *challenge1 = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
-    /*after changing the name we get the "unused variabl" error - sagi */
-    for(int i=0; i< (room->num_of_challenges) ; ++i){
-        if(level!=All_Levels) {
-            if((room -> challenges +i )->challenge->level==level){
-                if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
-                    *challenge=*(room->challenges+i)->challenge;
+    /* the challenge to be chosen is the lexicographically named smaller one that has
+     the required level. assume all names are different. */
+    {
+        if( (visitor == NULL) || (room == NULL) ) {
+            return NULL_PARAMETER;
+        }
+        int places=0;
+        num_of_free_places_for_level(room,level,&places);
+        
+        if(places < 1) return NO_AVAILABLE_CHALLENGES;
+        
+        if(visitor->room_name != NULL )
+            return ALREADY_IN_ROOM;
+        
+        Challenge *ChallengeToVisitor = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
+        int j=0;
+        for(int i=0; i< (room->num_of_challenges) ; ++i){
+            if(level!=All_Levels) {
+                if((room -> challenges +i )->challenge->level==level){
+                    if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
+                        *ChallengeToVisitor=*(room->challenges+i)->challenge;
+                        j=i;
+                    }
+                }
+            }
+            else{
+                if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
+                    *ChallengeToVisitor=*(room->challenges+i)->challenge;
+                    j=i;
                 }
             }
         }
-        else{
-            if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
-                *challenge=*(room->challenges+i)->challenge;
-            }
-        }
+        (room->challenges+j)->visitor=visitor;
+        (room->challenges+j)->start_time=start_time;
+        visitor->room_name=room->name;
+        visitor->current_challenge=(room->challenges+j);
+        (room->challenges+j)->challenge->num_visits+=1;
+        
+        return OK;
+        
     }
-    
-    return OK; /*if it doesn't enter all the "if"s we need a return - sagi*/
-}
 
 Result visitor_quit_room(Visitor *visitor, int quit_time){
-
-    if (visitor == NULL){
-        return NULL_PARAMETER;
-    } else if(room_of_visitor(visitor,room)== NOT_IN_ROOM) {
-        return NOT_IN_ROOM;
+    if (visitor == NULL) return NULL_PARAMETER;
+    
+    int totaltime=0;
+    if(visitor->room_name == NULL ) return NOT_IN_ROOM;
+    totaltime=quit_time-(visitor->current_challenge->start_time);
+    if (totaltime < visitor->current_challenge->challenge->best_time){
+        visitor->current_challenge->challenge->best_time = totaltime;
     }
+    visitor->current_challenge->visitor=NULL;
+    visitor->current_challenge->start_time=0;
+    visitor->room_name=NULL;
+    visitor->current_challenge=NULL;
+    
     return OK;
 }
 
