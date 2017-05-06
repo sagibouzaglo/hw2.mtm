@@ -7,7 +7,8 @@
 
 #include "visitor_room.h"
 
-Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge){
+Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge)
+{
     if( (activity == NULL) || (challenge == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -18,7 +19,8 @@ Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge
     return OK;
 }
 
-Result reset_challenge_activity(ChallengeActivity *activity){
+Result reset_challenge_activity(ChallengeActivity *activity)
+{
     if (activity == NULL) {
         return NULL_PARAMETER;
     }
@@ -28,7 +30,9 @@ Result reset_challenge_activity(ChallengeActivity *activity){
 
     return OK;
 }
-Result init_visitor(Visitor *visitor, char *name, int id){
+
+Result init_visitor(Visitor *visitor, char *name, int id)
+{
     if( (visitor == NULL) || (name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -48,7 +52,8 @@ Result init_visitor(Visitor *visitor, char *name, int id){
     return OK;
 }
 
-Result reset_visitor(Visitor *visitor){
+Result reset_visitor(Visitor *visitor)
+{
     if(visitor == NULL) {
         return NULL_PARAMETER;
     }
@@ -60,7 +65,8 @@ Result reset_visitor(Visitor *visitor){
     return OK;
 }
 
-Result init_room(ChallengeRoom *room, char *name, int num_challenges){
+Result init_room(ChallengeRoom *room, char *name, int num_challenges)
+{
     if( (room == NULL) || (name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -77,7 +83,8 @@ Result init_room(ChallengeRoom *room, char *name, int num_challenges){
     return OK;
 }
 
-Result reset_room(ChallengeRoom *room){
+Result reset_room(ChallengeRoom *room)
+{
     if (room == NULL) {
         return NULL_PARAMETER;
     }
@@ -89,7 +96,8 @@ Result reset_room(ChallengeRoom *room){
     return OK;
 }
 
-Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *places) {
+Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *places)
+{
     if (room == NULL) {
         return NULL_PARAMETER;
     }
@@ -109,7 +117,9 @@ Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *place
     *places=counter;
     return OK;
 }
-Result change_room_name(ChallengeRoom *room, char *new_name){
+
+Result change_room_name(ChallengeRoom *room, char *new_name)
+{
     if( (room == NULL) || (new_name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -120,7 +130,8 @@ Result change_room_name(ChallengeRoom *room, char *new_name){
     return OK;
 }
 
-Result room_of_visitor(Visitor *visitor, char **room_name){
+Result room_of_visitor(Visitor *visitor, char **room_name)
+{
     if( (visitor == NULL) || (room_name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -132,9 +143,9 @@ Result room_of_visitor(Visitor *visitor, char **room_name){
     return OK; /*if it doesn't enter all the "if"s we need a return - sagi*/
 }
 
-Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time)
 /* the challenge to be chosen is the lexicographically named smaller one that has
-   the required level. assume all names are different. */
+ the required level. assume all names are different. */
+Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time)
 {
     if( (visitor == NULL) || (room == NULL) ) {
         return NULL_PARAMETER;
@@ -146,13 +157,15 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
 
     Challenge *challenge = room->challenges->challenge;
 
-    char** room_name; /* Maybe we need a pointer here ?? */
+    char** room_name = &room->name; /* Maybe we need a pointer here ?? */
     /* i changed it to array of pointers, now the call to the 
-     function below works well - sagi*/
+     function below works well. also i inisialised it to the room name,
+     need to check it though- sagi*/
     if(room_of_visitor(visitor, room_name) != NOT_IN_ROOM)
         return ALREADY_IN_ROOM;
 
-    Challenge *challenge = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
+    Challenge *challenge1 = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
+    /*after changing the name we get the "unused variabl" error - sagi */
     for(int i=0; i< (room->num_of_challenges) ; ++i){
         if(level!=All_Levels) {
             if((room -> challenges +i )->challenge->level==level){
@@ -168,9 +181,17 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
         }
     }
     
-
+    return OK; /*if it doesn't enter all the "if"s we need a return - sagi*/
 }
 
-Result visitor_quit_room(Visitor *visitor, int quit_time);
+Result visitor_quit_room(Visitor *visitor, int quit_time)
+{
+    if (visitor == NULL){
+        return NULL_PARAMETER;
+    } else if(room_of_visitor(visitor,room)== NOT_IN_ROOM) {
+        return NOT_IN_ROOM;
+    }
+    return OK;
+}
 
 /* IMPLEMENT HERE ALL WHAT IS NEEDED */
