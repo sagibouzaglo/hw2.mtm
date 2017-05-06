@@ -4,10 +4,13 @@
 #include <string.h>
 #include <assert.h>
 
-
 #include "visitor_room.h"
+#include "challenge.h"
 
-Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge){
+
+Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge)
+/* Updating the challenge and resetting the rest of the fields */
+{
     if( (activity == NULL) || (challenge == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -28,7 +31,9 @@ Result reset_challenge_activity(ChallengeActivity *activity){
 
     return OK;
 }
-Result init_visitor(Visitor *visitor, char *name, int id){
+Result init_visitor(Visitor *visitor, char *name, int id)
+/* Updating the visitor name and the ID and resetting the other fields in Visitor */
+{
     if( (visitor == NULL) || (name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -60,7 +65,11 @@ Result reset_visitor(Visitor *visitor){
     return OK;
 }
 
-Result init_room(ChallengeRoom *room, char *name, int num_challenges){
+Result init_room(ChallengeRoom *room, char *name, int num_challenges)
+/*  Checks operator integrity  */
+/*  Checking memory allocation problems */
+/* Updating the room name and the num of challenges if they are bigger then zero */
+{
     if( (room == NULL) || (name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -176,7 +185,20 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
 }
 
 Result visitor_quit_room(Visitor *visitor, int quit_time){
-    
+    if (visitor == NULL) return NULL_PARAMETER;
+
+    int totaltime=0;
+    if(visitor->room_name == NULL ) return NOT_IN_ROOM;
+    totaltime=quit_time-(visitor->current_challenge->start_time);
+    if (totaltime < visitor->current_challenge->challenge->best_time){
+        visitor->current_challenge->challenge->best_time = totaltime;
+    }
+    visitor->current_challenge->visitor=NULL;
+    visitor->current_challenge->start_time=0;
+    visitor->room_name=NULL;
+    visitor->current_challenge=NULL;
+
+    return OK;
 }
 
 /* IMPLEMENT HERE ALL WHAT IS NEEDED */
