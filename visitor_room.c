@@ -149,45 +149,43 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
 {
     /* the challenge to be chosen is the lexicographically named smaller one that has
      the required level. assume all names are different. */
-    {
-        if( (visitor == NULL) || (room == NULL) ) {
-            return NULL_PARAMETER;
-        }
-        int places=0;
-        num_of_free_places_for_level(room,level,&places);
-        
-        if(places < 1) return NO_AVAILABLE_CHALLENGES;
-        
-        if(visitor->room_name != NULL )
-            return ALREADY_IN_ROOM;
-        
-        Challenge *ChallengeToVisitor = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
-        int j=0;
-        for(int i=0; i< (room->num_of_challenges) ; ++i){
-            if(level!=All_Levels) {
-                if((room -> challenges +i )->challenge->level==level){
-                    if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
-                        *ChallengeToVisitor=*(room->challenges+i)->challenge;
-                        j=i;
-                    }
-                }
-            }
-            else{
+    if( (visitor == NULL) || (room == NULL) ) {
+        return NULL_PARAMETER;
+    }
+    int places=0;
+    num_of_free_places_for_level(room,level,&places);
+    
+    if(places < 1) return NO_AVAILABLE_CHALLENGES;
+    
+    if(visitor->room_name != NULL )
+        return ALREADY_IN_ROOM;
+    
+    Challenge *ChallengeToVisitor = (room->challenges)->challenge; /*"Redefinition of 'challege',couldn't fix it for now... :(  -sagi*/
+    int j=0;
+    for(int i=0; i< (room->num_of_challenges) ; ++i){
+        if(level!=All_Levels) {
+            if((room -> challenges +i )->challenge->level==level){
                 if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
                     *ChallengeToVisitor=*(room->challenges+i)->challenge;
                     j=i;
                 }
             }
         }
-        (room->challenges+j)->visitor=visitor;
-        (room->challenges+j)->start_time=start_time;
-        visitor->room_name=room->name;
-        visitor->current_challenge=(room->challenges+j);
-        (room->challenges+j)->challenge->num_visits+=1;
-        
-        return OK;
-        
+        else{
+            if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
+                *ChallengeToVisitor=*(room->challenges+i)->challenge;
+                j=i;
+            }
+        }
     }
+    (room->challenges+j)->visitor=visitor;
+    (room->challenges+j)->start_time=start_time;
+    visitor->room_name=room->name;
+    visitor->current_challenge=(room->challenges+j);
+    (room->challenges+j)->challenge->num_visits+=1;
+    
+    return OK;
+}
 
 Result visitor_quit_room(Visitor *visitor, int quit_time){
     if (visitor == NULL) return NULL_PARAMETER;
