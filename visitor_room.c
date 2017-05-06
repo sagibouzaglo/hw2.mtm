@@ -146,10 +146,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
 
     Challenge *challenge = room->challenges->challenge;
 
-    char** room_name; /* Maybe we need a pointer here ?? */
-    /* i changed it to array of pointers, now the call to the 
-     function below works well - sagi*/
-    if(room_of_visitor(visitor, room_name) != NOT_IN_ROOM)
+    if(visitor->room_name != NULL )
         return ALREADY_IN_ROOM;
 
     Challenge *challenge = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
@@ -167,7 +164,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
             }
         }
     }
-    
+
 
 }
 
