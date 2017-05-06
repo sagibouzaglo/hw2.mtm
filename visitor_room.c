@@ -144,30 +144,39 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
 
     if(places < 1) return NO_AVAILABLE_CHALLENGES;
 
-    Challenge *challenge = room->challenges->challenge;
-
     if(visitor->room_name != NULL )
         return ALREADY_IN_ROOM;
 
-    Challenge *challenge = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
+    Challenge *ChallengeToVisitor = (room->challenges)->challenge; /*"Redefinition of 'challege', couldn't fix it for now... :(  -sagi*/
+    int j=0;
     for(int i=0; i< (room->num_of_challenges) ; ++i){
         if(level!=All_Levels) {
             if((room -> challenges +i )->challenge->level==level){
-                if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
-                    *challenge=*(room->challenges+i)->challenge;
+                if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
+                    *ChallengeToVisitor=*(room->challenges+i)->challenge;
+                    j=i;
                 }
             }
         }
         else{
-            if(strcmp((room->challenges+i)->challenge->name,challenge->name)<0){
-                *challenge=*(room->challenges+i)->challenge;
+            if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
+                *ChallengeToVisitor=*(room->challenges+i)->challenge;
+                j=i;
             }
         }
     }
+    (room->challenges+j)->visitor=visitor;
+    (room->challenges+j)->start_time=start_time;
+    visitor->room_name=room->name;
+    visitor->current_challenge=(room->challenges+j);
+    (room->challenges+j)->challenge->num_visits+=1;
 
+    return OK;
 
 }
 
-Result visitor_quit_room(Visitor *visitor, int quit_time);
+Result visitor_quit_room(Visitor *visitor, int quit_time){
+    
+}
 
 /* IMPLEMENT HERE ALL WHAT IS NEEDED */
