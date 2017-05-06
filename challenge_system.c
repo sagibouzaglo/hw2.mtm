@@ -28,7 +28,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     }
     /* I'm not sure about the Syntax *sys->(*name) */
     strcpy(*sys->(*name),buffer);
-    
+
     return OK;
 
 
