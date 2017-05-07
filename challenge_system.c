@@ -22,12 +22,12 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     if (buffer == NULL){
         return NULL_PARAMETER;
     }
-    sys->*name=malloc(sizeof(char*)*strlen(buffer));
-    if (*sys->(*name) == NULL){
+    **sys->*name=malloc(sizeof(char*)*strlen(buffer));
+    if ((*sys->*name) == NULL){
         return NULL_PARAMETER;
     }
     /* I'm not sure about the Syntax *sys->(*name) */
-    strcpy(*sys->(*name),buffer);
+    strcpy(sys->*name,buffer);
 
     return OK;
 
