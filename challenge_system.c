@@ -12,26 +12,26 @@
 
 
 /* open the data base file and take the imformation from it*/
-Result create_system(char *init_file, ChallengeRoomSystem **sys){
+Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     char buffer[ROW_LENGTH];
-    
-    FILE* file= fopen(init_file,"r");
-    if (file == NULL){
+
+    FILE *file = fopen(init_file, "r");
+    if (file == NULL) {
         return NULL_PARAMETER;
     }
-    fgets(buffer,ROW_LENGTH,file);
-    if (buffer == NULL){
+    fgets(buffer, ROW_LENGTH, file);
+    if (buffer == NULL) {
         return NULL_PARAMETER;
     }
-    (*sys)->name =malloc(sizeof(char*)*strlen(buffer));
-    if ((*sys)->name == NULL){
+    (*sys)->name = malloc(sizeof(char *) * strlen(buffer));
+    if ((*sys)->name == NULL) {
         return NULL_PARAMETER;
     }
-    /* I'm not sure about the Syntax *sys->(*name) */
-    strcpy(*sys->(name),buffer);
+   
+    strcpy(*sys->(name), buffer);
 
     return OK;
-
+}
 
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                       char **most_popular_challenge_p, char **challenge_best_time);
