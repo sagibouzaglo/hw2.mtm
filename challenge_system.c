@@ -28,8 +28,20 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
         return NULL_PARAMETER;
     }
 
-    strcpy(*sys->(name), buffer);
+    strcpy(*sys)->name, buffer);
+    int num_of_challenge = 0;
+    int IDchallenge=0;
+    Level level_chalenge=NULL;
 
+    fscanf(*file, "%d" ,num_of_challenge);
+
+    for(int i=0 ; i<num_of_challenge ; ++i ){
+        fscanf(*file , "%s %d %d" , buffer , IDchallenge , level_chalenge);
+        strcpy((*sys)->((*SysChallenges+i)->name),buffer);
+        (*sys)->((*SysChallenges+i)->id)=IDchallenge;
+        (*sys)->((*SysChallenges+i)->level)=level_chalenge;
+        
+    }
     return OK;
 }
 
