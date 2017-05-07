@@ -19,7 +19,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     if (file == NULL) {
         return NULL_PARAMETER;
     }
-    fgets(buffer, ROW_LENGTH, file);
+    int fscanf(*file, "%s" ,buffer);
     if (buffer == NULL) {
         return NULL_PARAMETER;
     }
@@ -27,7 +27,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     if ((*sys)->name == NULL) {
         return NULL_PARAMETER;
     }
-   
+
     strcpy(*sys->(name), buffer);
 
     return OK;
