@@ -24,7 +24,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
         return NULL_PARAMETER;
     }
     (*sys)->name =malloc(sizeof(char*)*strlen(buffer));
-    if (*sys->(name) == NULL){
+    if ((*sys)->name == NULL){
         return NULL_PARAMETER;
     }
     /* I'm not sure about the Syntax *sys->(*name) */
