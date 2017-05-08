@@ -13,6 +13,9 @@
 
 /* open the data base file and take the imformation from it*/
 Result create_system(char *init_file, ChallengeRoomSystem **sys) {
+
+   if((*sys)== NULL) return NULL_PARAMETER;
+
     char buffer[ROW_LENGTH];
 
     FILE *file = fopen(init_file, "r");
@@ -59,7 +62,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
 
         }
     }
-    fscanf(*file, "%d" ,num_of_room);
+    fclose(*file);
     return OK;
 }
 
