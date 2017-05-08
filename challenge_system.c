@@ -40,8 +40,8 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
         strcpy((*sys)->((*SysChallenges+i)->name),buffer);
         (*sys)->((*SysChallenges+i)->id)=IDchallenge;
         (*sys)->((*SysChallenges+i)->level)=level_chalenge;
-        
     }
+    int num_of_room
     return OK;
 }
 
