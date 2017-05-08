@@ -41,7 +41,25 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
         (*sys)->((*SysChallenges+i)->id)=IDchallenge;
         (*sys)->((*SysChallenges+i)->level)=level_chalenge;
     }
-    int num_of_room
+    int num_of_room=0;
+    int challenges_in_room=0;
+    int IDs_challenge=0;
+
+    for(int i=0 ; i <num_of_room ; i++ ){
+        fscanf(*file , "%s %d" , buffer , challenges_in_room );
+        strcpy((*sys)->((*SysRooms+i)->name),buffer);
+        (*sys)->((*SysRooms+i)->num_of_challenges)=challenges_in_room;
+        int j=0;
+        while (fscanf(*file , "%d" , IDs_challenge)!=EOF){
+            for(int k=0 ; k<num_of_challenge ; ++k ){
+                if((*sys)->((*SysChallenges+k)->id)==challenges_in_room){
+                    (*sys)->((*SysRooms+i)->challenges+j)= (*sys)->((*SysChallenges+k);
+                    j++;
+                }
+
+        }
+    }
+    fscanf(*file, "%d" ,num_of_room);
     return OK;
 }
 
