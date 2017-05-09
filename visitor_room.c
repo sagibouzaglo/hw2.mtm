@@ -88,10 +88,13 @@ Result reset_room(ChallengeRoom *room)
     if (room == NULL) {
         return NULL_PARAMETER;
     }
-    room->num_of_challenges = 0;
+    for(int i =0; i< room->num_of_challenges ; ++i){
+        reset_challenge(room->challenges+i);
+    }
     free(room->name);
     free(room->challenges);
     room->name = NULL;
+    room->num_of_challenges = 0;
 
     return OK;
 }

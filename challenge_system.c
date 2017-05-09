@@ -26,7 +26,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     if (buffer == NULL) {
         return NULL_PARAMETER;
     }
-    (*sys)->name = malloc(sizeof(char *) * strlen(buffer));
+    (*sys)->name = malloc(sizeof(char) * strlen(buffer)+1);
     if ((*sys)->name == NULL) {
         return MEMORY_PROBLEM;
     }
@@ -38,28 +38,35 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     Level level_chalenge=NULL;
 
     fscanf(input, "%d" ,&num_of_challenge);
+    (*sys)->(SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
+    if((*sys)->(SysChallenges)== NULL) return NULL_PARAMETER;
+
 
     for(int i=0 ; i<num_of_challenge ; ++i ){
         fscanf(input , "%s %d %d" , buffer , &IDchallenge , &level_chalenge);
-        strcpy((*sys)->((*SysChallenges+i)->name),buffer);
 
-        (*sys)->((*SysChallenges+i)->id)=IDchallenge;
-        (*sys)->((*SysChallenges+i)->level)=level_chalenge;
+        init_challenge(*(((*sys)->SysChallenges)+i), IDchallenge, buffer, level_chalenge);
     }
     int num_of_room=0;
     int challenges_in_room=0;
     int IDs_challenge=0;
+    fscanf(input, "%d" ,&num_of_room);
+
+    (*sys)->SysRooms=malloc(sizeof(ChallengeRoom)*num_of_room);
+    if ((*sys)->SysRooms == NULL) return NULL_PARAMETER;
 
     for(int i=0 ; i <num_of_room ; i++ ){
         fscanf(input , "%s %d" , buffer , &challenges_in_room );
-        strcpy((*sys)->((*SysRooms+i)->name),buffer);
-        (*sys)->((*SysRooms+i)->num_of_challenges)=challenges_in_room;
-        int j=0;
-        while (fscanf(input , "%d" , &IDs_challenge)!=1){
+        init_room(((*sys)->SysRooms)+i)),buffer,challenges_in_room);
+
+
+        for(int j=0; j<challenges_in_room ;++j){
+            fscanf(input , "%d" , &IDs_challenge);
             for(int k=0 ; k<num_of_challenge ; ++k ){
-                if((*sys)->((*SysChallenges+k)->id)==challenges_in_room){
-                    (*sys)->((*SysRooms+i)->challenges+j)= (*sys)->(*SysChallenges+k);
-                    j++;
+
+                if(((*sys)->SysChallenges)+k->id == challenges_in_room){
+                    init_challenge_activity(((*sys)->SysChallenges)+k);
+
                 }
             }
         }
@@ -69,7 +76,10 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
 }
 
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
-                      char **most_popular_challenge_p, char **challenge_best_time);
+                      char **most_popular_challenge_p, char **challenge_best_time){
+    all_visitors_quit(sys,destroy_time);
+
+}
 
 
 Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_name, int visitor_id, Level level, int start_time);
