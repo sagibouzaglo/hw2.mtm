@@ -122,6 +122,10 @@ char **most_popular_challenge_p, char **challenge_best_time){
         if(best_time_of_challenge(((*sys)->SysChallenges))+i,destroy_time) > num_of_visitor_in_challenge){
             num_of_visitor_in_challenge=best_time_of_challenge(((*sys)->SysChallenges))+i,destroy_time);
             j=i;
+        }else if(best_time_of_challenge(((*sys)->SysChallenges))+i,destroy_time) == num_of_visitor_in_challenge){
+            if(strcmp((((*sys)->SysChallenges))+j,){
+
+            }
         }
     }
     if(num_of_visitor_in_challenge==0) {

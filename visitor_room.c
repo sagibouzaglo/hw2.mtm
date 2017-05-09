@@ -183,7 +183,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     }
     (room->challenges+j)->visitor=visitor;
     (room->challenges+j)->start_time=start_time;
-    visitor->room_name=room->name;
+    *(visitor->room_name)=room->name;
     visitor->current_challenge=(room->challenges+j);
     (room->challenges+j)->challenge->num_visits+=1;
     
