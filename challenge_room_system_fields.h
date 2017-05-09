@@ -6,3 +6,4 @@ char *name;
 Challenge **SysChallenges;
 ChallengeRoom **SysRooms;
 struct node *linked_list;
+int time;

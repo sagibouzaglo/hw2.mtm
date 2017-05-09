@@ -14,17 +14,18 @@
 /* open the data base file and take the imformation from it*/
 Result create_system(char *init_file, ChallengeRoomSystem **sys) {
 
-   if((*sys)== NULL) return NULL_PARAMETER;
+    if((*sys)== NULL) return NULL_PARAMETER;
 
+    (*sys)->time = 0;
     char buffer[ROW_LENGTH];
 
     FILE *input = fopen(init_file, "r");
     if (input == NULL) {
-        return NULL_PARAMETER;
+        return MEMORY_PROBLEM;
     }
     fscanf(input, "%s" ,buffer);
     if (buffer == NULL) {
-        return NULL_PARAMETER;
+        return MEMORY_PROBLEM;
     }
     (*sys)->name = malloc(sizeof(char) * strlen(buffer)+1);
     if ((*sys)->name == NULL) {
@@ -39,7 +40,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
 
     fscanf(input, "%d" ,&num_of_challenge);
     (*sys)->(SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
-    if((*sys)->(SysChallenges)== NULL) return NULL_PARAMETER;
+    if((*sys)->(SysChallenges)== NULL) return MEMORY_PROBLEM;
 
 
     for(int i=0 ; i<num_of_challenge ; ++i ){
@@ -53,7 +54,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     fscanf(input, "%d" ,&num_of_room);
 
     (*sys)->SysRooms=malloc(sizeof(ChallengeRoom)*num_of_room);
-    if ((*sys)->SysRooms == NULL) return NULL_PARAMETER;
+    if ((*sys)->SysRooms == NULL) return MEMORY_PROBLEM;
 
     for(int i=0 ; i <num_of_room ; i++ ){
         fscanf(input , "%s %d" , buffer , &challenges_in_room );
@@ -78,6 +79,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                       char **most_popular_challenge_p, char **challenge_best_time){
     all_visitors_quit(sys,destroy_time);
+
 
 }
 
