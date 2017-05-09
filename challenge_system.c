@@ -10,13 +10,15 @@
 
 #define ROW_LENGTH 51
 
+static Result popular_challenge(ChallengeRoomSystem *sys, int destroy_time,
+char **most_popular_challenge_p, char **challenge_best_time);
 
 /* open the data base file and take the imformation from it*/
 Result create_system(char *init_file, ChallengeRoomSystem **sys) {
 
     if((*sys)== NULL) return NULL_PARAMETER;
 
-    (*sys)->time = 0;
+    ((*sys)->(Systime)) = 0;
     char buffer[ROW_LENGTH];
 
     FILE *input = fopen(init_file, "r");
@@ -41,7 +43,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     fscanf(input, "%d" ,&num_of_challenge);
     (*sys)->(SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
     if((*sys)->(SysChallenges)== NULL) return MEMORY_PROBLEM;
-
+    ((*sys)->(Sysnum_of_challenges)) = num_of_challenge;
 
     for(int i=0 ; i<num_of_challenge ; ++i ){
         fscanf(input , "%s %d %d" , buffer , &IDchallenge , &level_chalenge);
@@ -78,6 +80,9 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
 
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                       char **most_popular_challenge_p, char **challenge_best_time){
+
+    if(destroy_time<((*sys)->Systime))return ILLEGAL_TIME;
+
     all_visitors_quit(sys,destroy_time);
 
 
@@ -107,6 +112,28 @@ Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_n
 
 Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name);
 
+static Result popular_challenge(ChallengeRoomSystem *sys, int destroy_time,
+char **most_popular_challenge_p, char **challenge_best_time){
 
+
+    int num_of_visitor_in_challenge=0;
+    int j = 0;
+    for(int i=0; i<((*sys)->Sysnum_of_challenges);++i){
+        if(best_time_of_challenge(((*sys)->SysChallenges))+i,destroy_time) > num_of_visitor_in_challenge){
+            num_of_visitor_in_challenge=best_time_of_challenge(((*sys)->SysChallenges))+i,destroy_time);
+            j=i;
+        }
+    }
+    if(num_of_visitor_in_challenge==0) {
+        *most_popular_challenge_p=NULL;
+    }
+    else {
+        *most_popular_challenge_p = malloc(
+                sizeof(char) * strlen(((*sys)->SysChallenges) + j->name + 1));
+        if (*most_popular_challenge_p == NULL) return MEMORY_PROBLEM;
+    }
+
+    strcpy(most_popular_challenge_p,((*sys)->SysChallenges)+j->name);
+}
 #endif // CHALLENGE_SYSTEM_H_
 

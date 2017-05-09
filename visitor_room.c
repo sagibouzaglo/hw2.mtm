@@ -89,7 +89,7 @@ Result reset_room(ChallengeRoom *room)
         return NULL_PARAMETER;
     }
     for(int i =0; i< room->num_of_challenges ; ++i){
-        reset_challenge(room->challenges+i);
+        reset_challenge_activity((room->challenges)+i);
     }
     free(room->name);
     free(room->challenges);
