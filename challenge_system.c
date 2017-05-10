@@ -10,11 +10,13 @@
 
 #define ROW_LENGTH 51
 
+
 static Result popular_challenge(ChallengeRoomSystem *sys, int destroy_time,
 char **most_popular_challenge_p, char **challenge_best_time);
 
 /* open the data base file and take the imformation from it*/
-Result create_system(char *init_file, ChallengeRoomSystem **sys) {
+Result create_system(char *init_file, ChallengeRoomSystem **sys)
+{
 
     if((*sys)== NULL) return NULL_PARAMETER;
 
@@ -80,7 +82,8 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
 }
 
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
-                      char **most_popular_challenge_p, char **challenge_best_time){
+                      char **most_popular_challenge_p, char **challenge_best_time)
+{
 
     if(destroy_time<((*sys)->Systime))return ILLEGAL_TIME;
 
@@ -92,7 +95,6 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
 
 Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_name, int visitor_id, Level level, int start_time)
 {
-    
     return OK;
 }
 

@@ -7,7 +7,9 @@
 
 #include "challenge.h"
 
-
+/************************************************************************
+ * insialise challege struct to 0                                       *
+ ***********************************************************************/
 Result init_challenge(Challenge *challenge, int id, char *name, Level level)
 {
     if ((challenge == NULL) || (name == NULL)){
@@ -28,6 +30,9 @@ Result init_challenge(Challenge *challenge, int id, char *name, Level level)
     return OK;
 }
 
+/***********************************************************************
+ * reset challege struct to 0                                          *
+ **********************************************************************/
 Result reset_challenge(Challenge *challenge)
 {
     if (challenge == NULL){
@@ -39,6 +44,9 @@ Result reset_challenge(Challenge *challenge)
     return OK;
 }
 
+/************************************************************************
+ * changing the name of challenge                                       *
+ ***********************************************************************/
 Result change_name(Challenge *challenge, char *name)
 {
     if ((challenge == NULL) || (name == NULL)){
@@ -55,6 +63,9 @@ Result change_name(Challenge *challenge, char *name)
     return OK;
 }
 
+/************************************************************************
+ * set best time for challenge                                          *
+ ***********************************************************************/
 Result set_best_time_of_challenge(Challenge *challenge, int time)
 {
     if (challenge == NULL){
@@ -70,6 +81,9 @@ Result set_best_time_of_challenge(Challenge *challenge, int time)
     return OK;
 }
 
+/************************************************************************
+ * return the best time for a challenge                                 *
+ ***********************************************************************/
 Result best_time_of_challenge(Challenge *challenge, int *time)
 {
     if (challenge == NULL){
@@ -80,6 +94,9 @@ Result best_time_of_challenge(Challenge *challenge, int *time)
     return OK;
 }
 
+/************************************************************************
+ * add +1 to visitors count                                             *
+ ***********************************************************************/
 Result inc_num_visits(Challenge *challenge)
 {
     if (challenge == NULL){
@@ -89,6 +106,9 @@ Result inc_num_visits(Challenge *challenge)
     return OK;
 }
 
+/************************************************************************
+ * return visits amount                                                 *
+ ***********************************************************************/
 Result num_visits(Challenge *challenge, int *visits)
 {
     if (challenge == NULL){

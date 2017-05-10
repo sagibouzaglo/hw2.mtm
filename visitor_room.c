@@ -138,20 +138,17 @@ Result room_of_visitor(Visitor *visitor, char **room_name)
     if( (visitor == NULL) || (room_name == NULL) ) {
         return NULL_PARAMETER;
     }
-    *room_name=malloc(sizeof(char)*(strlen(*visitor->room_name)+1));/* moved the D reference from "room name" to visitor - sagi*/
-    if (visitor->room_name == NULL) { /* removed the D reference here, it gave us syntax error -sagi*/
-        return MEMORY_PROBLEM;
+    *room_name=malloc(sizeof(char)*(strlen(*visitor->room_name)+1));
+    if (visitor->room_name == NULL) {         return MEMORY_PROBLEM;
     }
     if(*visitor->room_name == NULL) return NOT_IN_ROOM;
-    return OK; /*if it doesn't enter all the "if"s we need a return - sagi*/
+    return OK;
 }
 
 /* the challenge to be chosen is the lexicographically named smaller one that has
  the required level. assume all names are different. */
 Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time)
 {
-    /* the challenge to be chosen is the lexicographically named smaller one that has
-     the required level. assume all names are different. */
     if( (visitor == NULL) || (room == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -163,7 +160,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     if(visitor->room_name != NULL )
         return ALREADY_IN_ROOM;
     
-    Challenge *ChallengeToVisitor = (room->challenges)->challenge; /*"Redefinition of 'challege',couldn't fix it for now... :(  -sagi*/
+    Challenge *ChallengeToVisitor = (room->challenges)->challenge; 
     int j=0;
     for(int i=0; i< (room->num_of_challenges) ; ++i){
         if(level!=All_Levels) {
