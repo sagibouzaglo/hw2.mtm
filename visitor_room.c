@@ -88,10 +88,13 @@ Result reset_room(ChallengeRoom *room)
     if (room == NULL) {
         return NULL_PARAMETER;
     }
-    room->num_of_challenges = 0;
+    for(int i =0; i< room->num_of_challenges ; ++i){
+        reset_challenge_activity((room->challenges)+i);
+    }
     free(room->name);
     free(room->challenges);
     room->name = NULL;
+    room->num_of_challenges = 0;
 
     return OK;
 }
@@ -180,7 +183,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     }
     (room->challenges+j)->visitor=visitor;
     (room->challenges+j)->start_time=start_time;
-    visitor->room_name=room->name;
+    *(visitor->room_name)=room->name;
     visitor->current_challenge=(room->challenges+j);
     (room->challenges+j)->challenge->num_visits+=1;
     
