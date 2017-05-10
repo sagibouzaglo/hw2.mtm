@@ -130,16 +130,17 @@ Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_n
 Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name);
 
 static Result popular_challenge(ChallengeRoomSystem *sys, int destroy_time,
-char **most_popular_challenge_p, char **challenge_best_time){
+char **most_popular_challenge_p){
 
 
     int num_of_visitor_in_challenge=0;
     int j = 0;
     for(int i=0; i<((sys)->Sysnum_of_challenges);++i){
-        if(most_popular_challenge(sys,(sys->SysChallenges)+i->name)) > num_of_visitor_in_challenge){
-            num_of_visitor_in_challenge=best_time_of_challenge(sys->SysChallenges)+i,destroy_time);
+        if(most_popular_challenge(sys,(sys->(SysChallenges+i)->name)) > num_of_visitor_in_challenge){
+            num_of_visitor_in_challenge= best_time_of_challenge(*(sys->SysChallenges+i),&destroy_time);
             j=i;
-        }else if(most_popular_challenge(sys,(*(sys->SysChallenges) +i->name) == num_of_visitor_in_challenge){
+        }
+        else if(most_popular_challenge(sys,sys->(SysChallenges+i)->name) == num_of_visitor_in_challenge){
             if(strcmp(((*(sys->SysChallenges+j))->name),((*(sys->SysChallenges+i))->name)) > 0 ) {
                 num_of_visitor_in_challenge=best_time_of_challenge((*(sys->SysChallenges)+i), &destroy_time);
                 j=i;
