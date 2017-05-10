@@ -41,9 +41,9 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     Level level_chalenge=NULL;
 
     fscanf(input, "%d" ,&num_of_challenge);
-    (*sys)->(SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
-    if((*sys)->(SysChallenges)== NULL) return MEMORY_PROBLEM;
-    ((*sys)->(Sysnum_of_challenges)) = num_of_challenge;
+    ((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
+    if(((*sys)->SysChallenges)== NULL) return MEMORY_PROBLEM;
+    ((*sys)->Sysnum_of_challenges)) = num_of_challenge;
 
     for(int i=0 ; i<num_of_challenge ; ++i ){
         fscanf(input , "%s %d %d" , buffer , &IDchallenge , &level_chalenge);
@@ -53,8 +53,9 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys) {
     int num_of_room=0;
     int challenges_in_room=0;
     int IDs_challenge=0;
+    ((*sys)->Sysnum_of_rooms)=0;
     fscanf(input, "%d" ,&num_of_room);
-
+    ((*sys)->Sysnum_of_rooms)=num_of_room;
     (*sys)->SysRooms=malloc(sizeof(ChallengeRoom)*num_of_room);
     if ((*sys)->SysRooms == NULL) return MEMORY_PROBLEM;
 
@@ -122,13 +123,14 @@ char **most_popular_challenge_p, char **challenge_best_time){
 
     int num_of_visitor_in_challenge=0;
     int j = 0;
-    for(int i=0; i<((*sys)->Sysnum_of_challenges);++i){
-        if(best_time_of_challenge(((*sys)->SysChallenges))+i,destroy_time) > num_of_visitor_in_challenge){
-            num_of_visitor_in_challenge=best_time_of_challenge(((*sys)->SysChallenges))+i,destroy_time);
+    for(int i=0; i<((sys)->Sysnum_of_challenges);++i){
+        if(most_popular_challenge(sys,(sys->SysChallenges)+i->name)) > num_of_visitor_in_challenge){
+            num_of_visitor_in_challenge=best_time_of_challenge(sys->SysChallenges)+i,destroy_time);
             j=i;
-        }else if(best_time_of_challenge(((*sys)->SysChallenges))+i,destroy_time) == num_of_visitor_in_challenge){
-            if(strcmp((((*sys)->SysChallenges))+j,){
-
+        }else if(most_popular_challenge(sys,(*(sys->SysChallenges+i)->name)) == num_of_visitor_in_challenge){
+            if(strcmp(((*(sys->SysChallenges+j))->name),((*(sys->SysChallenges+i))->name)) > 0 ) {
+                num_of_visitor_in_challenge=best_time_of_challenge(sys->SysChallenges)+i,destroy_time);
+                j=i;
             }
         }
     }
