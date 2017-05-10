@@ -7,6 +7,9 @@
 
 #include "visitor_room.h"
 
+/************************************************************************
+ * inisialise challenge activity to 0                                   *
+ ***********************************************************************/
 Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge)
 {
     if( (activity == NULL) || (challenge == NULL) ) {
@@ -19,6 +22,9 @@ Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge
     return OK;
 }
 
+/************************************************************************
+ * reset the challenge activity to 0                                    *
+ ***********************************************************************/
 Result reset_challenge_activity(ChallengeActivity *activity)
 {
     if (activity == NULL) {
@@ -31,6 +37,9 @@ Result reset_challenge_activity(ChallengeActivity *activity)
     return OK;
 }
 
+/************************************************************************
+ * inisialise visitor to 0                                              *
+ ***********************************************************************/
 Result init_visitor(Visitor *visitor, char *name, int id)
 {
     if( (visitor == NULL) || (name == NULL) ) {
@@ -52,6 +61,9 @@ Result init_visitor(Visitor *visitor, char *name, int id)
     return OK;
 }
 
+/************************************************************************
+ * reset visitor to 0                                                   *
+ ***********************************************************************/
 Result reset_visitor(Visitor *visitor)
 {
     if(visitor == NULL) {
@@ -65,6 +77,9 @@ Result reset_visitor(Visitor *visitor)
     return OK;
 }
 
+/************************************************************************
+ * inisialise room to 0                                                 *
+ ***********************************************************************/
 Result init_room(ChallengeRoom *room, char *name, int num_challenges)
 {
     if( (room == NULL) || (name == NULL) ) {
@@ -83,6 +98,9 @@ Result init_room(ChallengeRoom *room, char *name, int num_challenges)
     return OK;
 }
 
+/************************************************************************
+ * reset room to 0                                                      *
+ ***********************************************************************/
 Result reset_room(ChallengeRoom *room)
 {
     if (room == NULL) {
@@ -99,6 +117,9 @@ Result reset_room(ChallengeRoom *room)
     return OK;
 }
 
+/************************************************************************
+ * return the number of free challenges in room of the given level      *
+ ***********************************************************************/
 Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *places)
 {
     if (room == NULL) {
@@ -121,6 +142,9 @@ Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *place
     return OK;
 }
 
+/************************************************************************
+ * change the room name                                                 *
+ ***********************************************************************/
 Result change_room_name(ChallengeRoom *room, char *new_name)
 {
     if( (room == NULL) || (new_name == NULL) ) {
@@ -133,6 +157,9 @@ Result change_room_name(ChallengeRoom *room, char *new_name)
     return OK;
 }
 
+/************************************************************************
+ * find the room of given visitor                                       *
+ ***********************************************************************/
 Result room_of_visitor(Visitor *visitor, char **room_name)
 {
     if( (visitor == NULL) || (room_name == NULL) ) {
@@ -145,8 +172,10 @@ Result room_of_visitor(Visitor *visitor, char **room_name)
     return OK;
 }
 
-/* the challenge to be chosen is the lexicographically named smaller one that has
- the required level. assume all names are different. */
+/************************************************************************
+ * enter visitor to a challenge (with the smaller lexicographic name)   *
+ * of a chosen level. if possible                                       *
+ ***********************************************************************/
 Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time)
 {
     if( (visitor == NULL) || (room == NULL) ) {
@@ -187,7 +216,11 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     return OK;
 }
 
-Result visitor_quit_room(Visitor *visitor, int quit_time){
+/************************************************************************
+ * visitor leave the room and update all relevant info                  *
+ ***********************************************************************/
+Result visitor_quit_room(Visitor *visitor, int quit_time)
+{
     if (visitor == NULL) return NULL_PARAMETER;
     
     int totaltime=0;
@@ -204,4 +237,3 @@ Result visitor_quit_room(Visitor *visitor, int quit_time){
     return OK;
 }
 
-/* IMPLEMENT HERE ALL WHAT IS NEEDED */
