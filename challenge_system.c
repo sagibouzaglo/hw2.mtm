@@ -95,6 +95,16 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
 
 Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_name, int visitor_id, Level level, int start_time)
 {
+    if (sys == NULL){
+        return NULL_PARAMETER;
+    }
+    if ((visitor_name == NULL)||(room_name == NULL)){
+        return ILLEGAL_PARAMETER;
+    }
+    Visitor visitor;
+    /* need to use system_room_of_visitor */
+    
+    
     return OK;
 }
 
