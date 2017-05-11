@@ -106,34 +106,37 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
 }
 
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
-                      char **most_popular_challenge_p, char **challenge_best_time){
-
-    if(destroy_time<(sys->Systime))return ILLEGAL_TIME;
-
-    all_visitors_quit(sys,destroy_time);
-    int best_time=0;
-    most_popular_challenge(sys,most_popular_challenge_p);
-    if(*most_popular_challenge_p == NULL) {
-        *challenge_best_time=NULL;
+                      char **most_popular_challenge_p, char **challenge_best_time) {
+    if (destroy_time < (sys->Systime))return ILLEGAL_TIME;
+    all_visitors_quit(sys, destroy_time);
+    int best_time = 0;
+    most_popular_challenge(sys, most_popular_challenge_p);
+    if (*most_popular_challenge_p == NULL) {
+        *challenge_best_time = NULL;
     } else {
-        best_time_of_system_challenge(sys,(*(((sys)->SysChallenges)))->name , &best_time);
-        int challenge_time=0;
-        int j=NOT_FOUND;
-        for(int i=1; i < (sys->Sysnum_of_challenges); ++i){
-            best_time_of_system_challenge(sys,(*(((sys)->SysChallenges)+i))->name , &challenge_time);
-            if (challenge_time < best_time){
+        best_time_of_system_challenge(sys, (*(((sys)->SysChallenges)))->name,
+                                      &best_time);
+        int challenge_time = 0;
+        int j = NOT_FOUND;
+        for (int i = 1; i < (sys->Sysnum_of_challenges); ++i) {
+            best_time_of_system_challenge(sys,
+                                          (*(((sys)->SysChallenges) + i))->name,
+                                          &challenge_time);
+            if(challenge_time<best_time){
                 best_time = challenge_time;
                 j=i;
             }
             if(challenge_time==best_time){
-                if(strcmp(((*(sys->SysChallenges+j))->name),((*(sys->SysChallenges+i))->name)) > 0 ) {
+                if (strcmp(((*(sys->SysChallenges + j))->name),
+                           ((*(sys->SysChallenges + i))->name)) > 0) {
                     best_time = challenge_time;
                     j=i;
                 }
             }
 
             *challenge_best_time = malloc(
-                    sizeof(char) * strlen((*((sys)->SysChallenges) + j)->name + 1));
+                    sizeof(char) *
+                    strlen((*((sys)->SysChallenges) + j)->name + 1));
             if (*challenge_best_time == NULL) return MEMORY_PROBLEM;
 
             strcpy(*challenge_best_time,(((*(sys)->SysChallenges)+j)->name));
@@ -142,9 +145,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
     }
     Result check = reset_all_rooms(sys);
     if (check != OK) return check;
-
-
-
+    return OK;
 }
 
 
@@ -330,7 +331,9 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
     strcpy(*challenge_name,(((*(sys)->SysChallenges)+j)->name));
     return OK;
 }
-
+/************************************************************************
+ *                           *
+ ***********************************************************************/
 static Result reset_all_rooms(ChallengeRoomSystem *sys){
     if(sys == NULL) return NULL_PARAMETER;
     Result check;
@@ -340,7 +343,7 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys){
         }
     return OK;
     }
-}
+
 
 
 
