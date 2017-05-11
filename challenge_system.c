@@ -109,7 +109,30 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
 }
 
 
-Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time);
+Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time)
+{
+    if (((quit_time<0)||(quit_time<=(sys->Systime)))&&(sys!=NULL)){
+        return ILLEGAL_TIME;
+    }
+    if (sys == NULL){
+        return NULL_PARAMETER;
+    }
+    Node tmp_node=malloc(sizeof(Node));
+    if (tmp_node == NULL){
+        return MEMORY_PROBLEM;
+    }
+    tmp_node->next = sys->linked_list;
+    sys->linked_list=tmp_node;
+    while((sys->linked_list->visitor->visitor_id)!= visitor_id){
+        tmp_node->next=sys->linked_list->next;
+        if (linked_list->next == NULL){
+            return ILLEGAL_PARAMETER;
+        }
+    }
+    visitor_quit_room(sys->linked_list->visitor, quit_time);
+    sys->Systime=quit_time;
+    return OK;
+}
 
 
 Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time);
@@ -154,11 +177,7 @@ Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *n
         if (i>=sys->Sysnum_of_challenges){
             return ILLEGAL_PARAMETER;
         }
-    int check = change_name((*((sys->SysChallenges)+i)),new_name);
-    if (check != OK){
-        return check;
-    }
-    return OK;
+    return change_name((*((sys->SysChallenges)+i)),new_name);
 }
 
 
@@ -171,15 +190,10 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, cha
     while ((i<(sys->Sysnum_of_rooms))&&(strcmp(current_name,((*((sys->SysRooms)+i))->name))!=0)){
         i++;
     }
-    if (i>=sys->Sysnum_of_challenges){
+    if (i>=sys->Sysnum_of_rooms){
         return ILLEGAL_PARAMETER;
     }
-    int check = change_room_name((*((sys->SysRooms)+i)), new_name);
-    if (check != OK){
-        return check;
-    }
-    return OK;
-
+    return change_room_name((*((sys->SysRooms)+i)), new_name);
 }
 
 

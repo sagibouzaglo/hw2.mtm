@@ -74,7 +74,6 @@ Result set_best_time_of_challenge(Challenge *challenge, int time)
     if (time < 0){
         return ILLEGAL_PARAMETER;
     }
-    
     if (time< challenge->best_time){
         challenge->best_time=time;
     }

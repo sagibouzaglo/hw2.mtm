@@ -224,12 +224,10 @@ Result visitor_quit_room(Visitor *visitor, int quit_time)
 {
     if (visitor == NULL) return NULL_PARAMETER;
     
-    int totaltime=0;
+    int total_time=0;
     if(visitor->room_name == NULL ) return NOT_IN_ROOM;
-    totaltime=quit_time-(visitor->current_challenge->start_time);
-    if (totaltime < visitor->current_challenge->challenge->best_time){
-        visitor->current_challenge->challenge->best_time = totaltime;
-    }
+    total_time=quit_time-(visitor->current_challenge->start_time);
+    set_best_time_of_challenge(visitor->current_challenge->challenge,total_time);
     visitor->current_challenge->visitor=NULL;
     visitor->current_challenge->start_time=0;
     visitor->room_name=NULL;
