@@ -9,8 +9,9 @@
 #include "challenge_room_system_fields.h"
 
 #define ROW_LENGTH 51
+#define NOT_FOUND -1
 
-
+static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
 /* open the data base file and take the imformation from it*/
 Result create_system(char *init_file, ChallengeRoomSystem **sys)
@@ -55,7 +56,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys)
     int IDs_challenge=0;
 
     fscanf(input, "%d" ,&num_of_room);
-    (*sys)->Sysnum_of_rooms = num_of_room;
+    (*sys)-> = num_of_room;
     (*sys)->SysRooms=malloc(sizeof(ChallengeRoom)*num_of_room);
     if ((*sys)->SysRooms == NULL) return MEMORY_PROBLEM;
 
@@ -68,8 +69,8 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys)
             fscanf(input , "%d" , &IDs_challenge);
             for(int k=0 ; k<num_of_challenge ; ++k ){
 
-                if(((*sys)->SysChallenges)+k->id == challenges_in_room){
-                    init_challenge_activity(,*(((*sys)->SysChallenges)+k));
+                if((*sys)->(SysChallenges+k)->id == challenges_in_room){
+                    init_challenge_activity(*(((*sys)->(SysRooms+i)))->challenges,*(((*sys)->SysChallenges)+k));/*???? <-- ??*/
 
                 }
             }
@@ -83,13 +84,41 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                       char **most_popular_challenge_p, char **challenge_best_time)
 {
 
-    if(destroy_time<((*sys)->Systime))return ILLEGAL_TIME;
+    if(destroy_time<(sys->Systime))return ILLEGAL_TIME;
 
     all_visitors_quit(sys,destroy_time);
-    for(int i=0;i<(sys->Sysnum_of_rooms);++i){
+    int best_time=0;
+    most_popular_challenge(sys,most_popular_challenge_p);
+    if(*most_popular_challenge_p == NULL) {
+        *challenge_best_time=NULL;
+    } else {
+        best_time_of_system_challenge(sys,(*(((sys)->SysChallenges)))->name , &best_time);
+        int challenge_time=0;
+        int j=NOT_FOUND;
+        for(int i=1; i < (sys->Sysnum_of_challenges); ++i){
+            best_time_of_system_challenge(sys,(*(((sys)->SysChallenges)+i))->name , &challenge_time);
+            if (challenge_time < best_time){
+                best_time = challenge_time;
+                j=i;
+            }
+            if(challenge_time==best_time){
+                if(strcmp(((*(sys->SysChallenges+j))->name),((*(sys->SysChallenges+i))->name)) > 0 ) {
+                    best_time = challenge_time;
+                    j=i;
+                }
+            }
+
+            *challenge_best_time = malloc(
+                    sizeof(char) * strlen((*((sys)->SysChallenges) + j)->name + 1));
+            if (*challenge_best_time == NULL) return MEMORY_PROBLEM;
+
+            strcpy(*challenge_best_time,(((*(sys)->SysChallenges)+j)->name));
+        }
 
     }
-    most_popular_challenge(sys,destroy_time,most_popular_challenge_p);
+    Result check = reset_all_rooms(sys);
+    if (check != OK) return check;
+
 
 
 }
@@ -202,14 +231,14 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, cha
 Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_name, int *time) {
 
     if (sys == NULL || challenge_name == NULL) return NULL_PARAMETER;
-    int j = -1;/*dif*/
+    int j = NOT_FOUND;
     for (int i = 0; i < (sys->Sysnum_of_challenges); ++i) {
         if (strcmp(challenge_name, ((*(sys->SysChallenges + i))->name)) == 0){
             j = i;
             break;
         }
     }
-    if (j == -1)return ILLEGAL_PARAMETER;
+    if (j == NOT_FOUND)return ILLEGAL_PARAMETER;
     return best_time_of_challenge(((*(sys->SysChallenges + j))),time);
 
 }
@@ -247,6 +276,15 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
     return OK;
 }
 
-
+static Result reset_all_rooms(ChallengeRoomSystem *sys){
+    if(sys == NULL) return NULL_PARAMETER;
+    Result check;
+    for(int i =0; i<((sys)->Sys_num_of_rooms) ; ++i){
+        check=reset_room(*(((sys)->SysRooms)+i));
+        if(check != OK) return check;
+        }
+    return OK;
+    }
+}
 #endif // CHALLENGE_SYSTEM_H_
 

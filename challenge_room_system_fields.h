@@ -7,5 +7,5 @@ Challenge **SysChallenges;
 ChallengeRoom **SysRooms;
 Node linked_list;
 int Systime;
-int Sysnum_of_rooms;
+int Sys_num_of_rooms;
 int Sysnum_of_challenges;

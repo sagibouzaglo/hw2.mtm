@@ -9,6 +9,7 @@ typedef struct SChallengeRoomSystem
 
 #include "challenge_room_system_fields.h"
 
+
 } ChallengeRoomSystem;
 
 
