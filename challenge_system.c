@@ -11,8 +11,6 @@
 #define ROW_LENGTH 51
 
 
-static Result popular_challenge(ChallengeRoomSystem *sys, int destroy_time,
-char **most_popular_challenge_p, char **challenge_best_time);
 
 /* open the data base file and take the imformation from it*/
 Result create_system(char *init_file, ChallengeRoomSystem **sys)
@@ -45,7 +43,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys)
     fscanf(input, "%d" ,&num_of_challenge);
     ((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
     if(((*sys)->SysChallenges)== NULL) return MEMORY_PROBLEM;
-    ((*sys)->Sysnum_of_challenges)) = num_of_challenge;
+    ((*sys)->Sysnum_of_challenges) = num_of_challenge;
 
     for(int i=0 ; i<num_of_challenge ; ++i ){
         fscanf(input , "%s %d %d" , buffer , &IDchallenge , &level_chalenge);
@@ -55,15 +53,15 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys)
     int num_of_room=0;
     int challenges_in_room=0;
     int IDs_challenge=0;
-    ((*sys)->Sysnum_of_rooms)=0;
+
     fscanf(input, "%d" ,&num_of_room);
-    ((*sys)->Sysnum_of_rooms) =num_of_room;
+    (*sys)->Sysnum_of_rooms = num_of_room;
     (*sys)->SysRooms=malloc(sizeof(ChallengeRoom)*num_of_room);
     if ((*sys)->SysRooms == NULL) return MEMORY_PROBLEM;
 
     for(int i=0 ; i <num_of_room ; i++ ){
         fscanf(input , "%s %d" , buffer , &challenges_in_room );
-        init_room(((*sys)->SysRooms)+i)),buffer,challenges_in_room);
+        init_room(*(((*sys)->SysRooms)+i),buffer,challenges_in_room);
 
 
         for(int j=0; j<challenges_in_room ;++j){
@@ -71,7 +69,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys)
             for(int k=0 ; k<num_of_challenge ; ++k ){
 
                 if(((*sys)->SysChallenges)+k->id == challenges_in_room){
-                    init_challenge_activity(((*sys)->SysChallenges)+k);
+                    init_challenge_activity(,*(((*sys)->SysChallenges)+k));
 
                 }
             }
@@ -88,6 +86,10 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
     if(destroy_time<((*sys)->Systime))return ILLEGAL_TIME;
 
     all_visitors_quit(sys,destroy_time);
+    for(int i=0;i<(sys->Sysnum_of_rooms);++i){
+
+    }
+    most_popular_challenge(sys,destroy_time,most_popular_challenge_p);
 
 
 }
@@ -197,39 +199,54 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, cha
 }
 
 
-Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_name, int *time);
+Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_name, int *time) {
 
+    if (sys == NULL || challenge_name == NULL) return NULL_PARAMETER;
+    int j = -1;/*dif*/
+    for (int i = 0; i < (sys->Sysnum_of_challenges); ++i) {
+        if (strcmp(challenge_name, ((*(sys->SysChallenges + i))->name)) == 0){
+            j = i;
+            break;
+        }
+    }
+    if (j == -1)return ILLEGAL_PARAMETER;
+    return best_time_of_challenge(((*(sys->SysChallenges + j))),time);
 
-Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name);
+}
 
-static Result popular_challenge(ChallengeRoomSystem *sys, int destroy_time,
-char **most_popular_challenge_p){
+Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
 
+    if(sys == NULL) return NULL_PARAMETER;
 
-    int num_of_visitor_in_challenge=0;
+    int max_num_of_visitor_in_challenge=0;
+    int visits=0;
     int j = 0;
     for(int i=0; i<((sys)->Sysnum_of_challenges);++i){
-        if(most_popular_challenge(sys,(sys->(SysChallenges+i)->name)) > num_of_visitor_in_challenge){
-            num_of_visitor_in_challenge= best_time_of_challenge(*(sys->SysChallenges+i),&destroy_time);
+        num_visits((*(sys->SysChallenges+i)),&visits);
+        if(visits > max_num_of_visitor_in_challenge){
+            max_num_of_visitor_in_challenge = visits;
             j=i;
         }
-        else if(most_popular_challenge(sys,sys->(SysChallenges+i)->name) == num_of_visitor_in_challenge){
+        else if(visits == max_num_of_visitor_in_challenge){
             if(strcmp(((*(sys->SysChallenges+j))->name),((*(sys->SysChallenges+i))->name)) > 0 ) {
-                num_of_visitor_in_challenge=best_time_of_challenge((*(sys->SysChallenges)+i), &destroy_time);
+                max_num_of_visitor_in_challenge = visits;
                 j=i;
             }
         }
     }
-    if(num_of_visitor_in_challenge==0) {
-        *most_popular_challenge_p=NULL;
-    }
-    else {
-        *most_popular_challenge_p = malloc(
-                sizeof(char) * strlen((*((sys)->SysChallenges) + j)->name + 1));
-        if (*most_popular_challenge_p == NULL) return MEMORY_PROBLEM;
+    if(max_num_of_visitor_in_challenge==0) {
+        *challenge_name=NULL;
+        return OK;
     }
 
-    strcpy(*most_popular_challenge_p,(((*(sys)->SysChallenges)+j)->name));
+    *challenge_name = malloc(
+            sizeof(char) * strlen((*((sys)->SysChallenges) + j)->name + 1));
+    if (*challenge_name == NULL) return MEMORY_PROBLEM;
+
+    strcpy(*challenge_name,(((*(sys)->SysChallenges)+j)->name));
+    return OK;
 }
+
+
 #endif // CHALLENGE_SYSTEM_H_
 
