@@ -10,8 +10,7 @@
 /************************************************************************
  * inisialise challenge activity to 0                                   *
  ***********************************************************************/
-Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge)
-{
+Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge){
     if( (activity == NULL) || (challenge == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -25,8 +24,7 @@ Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge
 /************************************************************************
  * reset the challenge activity to 0                                    *
  ***********************************************************************/
-Result reset_challenge_activity(ChallengeActivity *activity)
-{
+Result reset_challenge_activity(ChallengeActivity *activity){
     if (activity == NULL) {
         return NULL_PARAMETER;
     }
@@ -40,8 +38,7 @@ Result reset_challenge_activity(ChallengeActivity *activity)
 /************************************************************************
  * inisialise visitor to 0                                              *
  ***********************************************************************/
-Result init_visitor(Visitor *visitor, char *name, int id)
-{
+Result init_visitor(Visitor *visitor, char *name, int id){
     if( (visitor == NULL) || (name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -64,8 +61,7 @@ Result init_visitor(Visitor *visitor, char *name, int id)
 /************************************************************************
  * reset visitor to 0                                                   *
  ***********************************************************************/
-Result reset_visitor(Visitor *visitor)
-{
+Result reset_visitor(Visitor *visitor){
     if(visitor == NULL) {
         return NULL_PARAMETER;
     }
@@ -80,8 +76,7 @@ Result reset_visitor(Visitor *visitor)
 /************************************************************************
  * inisialise room to 0                                                 *
  ***********************************************************************/
-Result init_room(ChallengeRoom *room, char *name, int num_challenges)
-{
+Result init_room(ChallengeRoom *room, char *name, int num_challenges){
     if( (room == NULL) || (name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -101,8 +96,7 @@ Result init_room(ChallengeRoom *room, char *name, int num_challenges)
 /************************************************************************
  * reset room to 0                                                      *
  ***********************************************************************/
-Result reset_room(ChallengeRoom *room)
-{
+Result reset_room(ChallengeRoom *room){
     if (room == NULL) {
         return NULL_PARAMETER;
     }
@@ -120,8 +114,7 @@ Result reset_room(ChallengeRoom *room)
 /************************************************************************
  * return the number of free challenges in room of the given level      *
  ***********************************************************************/
-Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *places)
-{
+Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *places){
     if (room == NULL) {
         return NULL_PARAMETER;
     }
@@ -145,8 +138,7 @@ Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *place
 /************************************************************************
  * change the room name                                                 *
  ***********************************************************************/
-Result change_room_name(ChallengeRoom *room, char *new_name)
-{
+Result change_room_name(ChallengeRoom *room, char *new_name){
     if( (room == NULL) || (new_name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -160,8 +152,7 @@ Result change_room_name(ChallengeRoom *room, char *new_name)
 /************************************************************************
  * find the room of given visitor                                       *
  ***********************************************************************/
-Result room_of_visitor(Visitor *visitor, char **room_name)
-{
+Result room_of_visitor(Visitor *visitor, char **room_name){
     if( (visitor == NULL) || (room_name == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -169,7 +160,7 @@ Result room_of_visitor(Visitor *visitor, char **room_name)
     *room_name=malloc(sizeof(char)*(strlen(*visitor->room_name)+1));
     if (visitor->room_name == NULL) return MEMORY_PROBLEM;
     
-    strcpy(*room_name,*visitor->room_name); //was missing, i think it's ok now
+    strcpy(*room_name,*visitor->room_name);
     return OK;
 }
 
@@ -177,8 +168,7 @@ Result room_of_visitor(Visitor *visitor, char **room_name)
  * enter visitor to a challenge (with the smaller lexicographic name)   *
  * of a chosen level. if possible                                       *
  ***********************************************************************/
-Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time)
-{
+Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time){
     if( (visitor == NULL) || (room == NULL) ) {
         return NULL_PARAMETER;
     }
@@ -220,8 +210,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
 /************************************************************************
  * visitor leave the room and update all relevant info                  *
  ***********************************************************************/
-Result visitor_quit_room(Visitor *visitor, int quit_time)
-{
+Result visitor_quit_room(Visitor *visitor, int quit_time){
     if (visitor == NULL) return NULL_PARAMETER;
     
     int total_time=0;

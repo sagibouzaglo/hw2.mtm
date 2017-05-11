@@ -10,8 +10,7 @@
 /************************************************************************
  * insialise challege struct to 0                                       *
  ***********************************************************************/
-Result init_challenge(Challenge *challenge, int id, char *name, Level level)
-{
+Result init_challenge(Challenge *challenge, int id, char *name, Level level){
     if ((challenge == NULL) || (name == NULL)){
         return NULL_PARAMETER;
     }
@@ -33,8 +32,7 @@ Result init_challenge(Challenge *challenge, int id, char *name, Level level)
 /***********************************************************************
  * reset challege struct to 0                                          *
  **********************************************************************/
-Result reset_challenge(Challenge *challenge)
-{
+Result reset_challenge(Challenge *challenge){
     if (challenge == NULL){
         return NULL_PARAMETER;
     } else {
@@ -47,8 +45,7 @@ Result reset_challenge(Challenge *challenge)
 /************************************************************************
  * changing the name of challenge                                       *
  ***********************************************************************/
-Result change_name(Challenge *challenge, char *name)
-{
+Result change_name(Challenge *challenge, char *name){
     if ((challenge == NULL) || (name == NULL)){
         return NULL_PARAMETER;
     }
@@ -66,8 +63,7 @@ Result change_name(Challenge *challenge, char *name)
 /************************************************************************
  * set best time for challenge                                          *
  ***********************************************************************/
-Result set_best_time_of_challenge(Challenge *challenge, int time)
-{
+Result set_best_time_of_challenge(Challenge *challenge, int time){
     if (challenge == NULL){
         return NULL_PARAMETER;
     }
@@ -83,8 +79,7 @@ Result set_best_time_of_challenge(Challenge *challenge, int time)
 /************************************************************************
  * return the best time for a challenge                                 *
  ***********************************************************************/
-Result best_time_of_challenge(Challenge *challenge, int *time)
-{
+Result best_time_of_challenge(Challenge *challenge, int *time){
     if (challenge == NULL){
         return NULL_PARAMETER;
     }
@@ -96,8 +91,7 @@ Result best_time_of_challenge(Challenge *challenge, int *time)
 /************************************************************************
  * add +1 to visitors count                                             *
  ***********************************************************************/
-Result inc_num_visits(Challenge *challenge)
-{
+Result inc_num_visits(Challenge *challenge){
     if (challenge == NULL){
         return NULL_PARAMETER;
     }
@@ -108,8 +102,7 @@ Result inc_num_visits(Challenge *challenge)
 /************************************************************************
  * return visits amount                                                 *
  ***********************************************************************/
-Result num_visits(Challenge *challenge, int *visits)
-{
+Result num_visits(Challenge *challenge, int *visits){
     if (challenge == NULL){
         return NULL_PARAMETER;
     }

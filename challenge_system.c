@@ -17,6 +17,11 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys);
 Result create_system(char *init_file, ChallengeRoomSystem **sys)
 {
 
+/************************************************************************
+ * open the data base file and take the imformation from it             *
+ ***********************************************************************/
+Result create_system(char *init_file, ChallengeRoomSystem **sys){
+
     if((*sys)== NULL) return NULL_PARAMETER;
 
     ((*sys)->(Systime)) = 0;
@@ -81,8 +86,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys)
 }
 
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
-                      char **most_popular_challenge_p, char **challenge_best_time)
-{
+                      char **most_popular_challenge_p, char **challenge_best_time){
 
     if(destroy_time<(sys->Systime))return ILLEGAL_TIME;
 
@@ -123,9 +127,10 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
 
 }
 
-
-Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_name, int visitor_id, Level level, int start_time)
-{
+/************************************************************************
+ *                    *
+ ***********************************************************************/
+Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_name, int visitor_id, Level level, int start_time){
     if (sys == NULL){
         return NULL_PARAMETER;
     }
@@ -137,11 +142,13 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
     
     
     return OK;
-}
+} //not finished
 
-
-Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time)
-{
+/************************************************************************
+ * visitor is exiting the room and saving his best time.                *
+ * alse the system realese memory and change the linked list            *
+ ***********************************************************************/
+Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
     if (((quit_time<0)||(quit_time<=(sys->Systime)))&&(sys!=NULL)){
         return ILLEGAL_TIME;
     }
@@ -163,14 +170,35 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time)
     visitor_quit_room(sys->linked_list->visitor, quit_time);
     sys->Systime=quit_time;
     return OK;
+} // not finished
+
+/************************************************************************
+ * using "visitor quit" to exit all visitors from the system and        *
+ * release the memory                                                   *
+ ***********************************************************************/
+Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time){
+    if (((quit_time<0)||(quit_time<=(sys->Systime)))&&(sys!=NULL)){
+        return ILLEGAL_TIME;
+    }
+    if (sys == NULL){
+        return NULL_PARAMETER;
+    }
+    Result check;
+    while (sys->linked_list != NULL){
+        sys->linked_list=sys->linked_list->next;
+        check =visitor_quit(sys,sys->linked_list->visitor->visitor_id,quit_time);
+        if (check != OK){
+            return check;
+        }
+
+    }
+    return OK;
 }
 
-
-Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time);
-
-
-Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char **room_name)
-{
+/************************************************************************
+ * using "room_of_visitor" to find the room the visitr is staying in    *
+ ***********************************************************************/
+Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char **room_name){
     if (sys == NULL){
         return NULL_PARAMETER;
     }
@@ -195,9 +223,10 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char
     return OK;
 }
 
-
-Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *new_name)
-{
+/************************************************************************
+ * finding the relevant challenge and change it's name                  *
+ ***********************************************************************/
+Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *new_name){
     if ((sys == NULL)||(new_name == NULL)){
         return NULL_PARAMETER;
     }
@@ -211,9 +240,10 @@ Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *n
     return change_name((*((sys->SysChallenges)+i)),new_name);
 }
 
-
-Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, char *new_name)
-{
+/************************************************************************
+ * finding the relevant room and change it's name                       *
+ ***********************************************************************/
+Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, char *new_name){
     if ((sys == NULL)||(new_name == NULL)){
         return NULL_PARAMETER;
     }
@@ -227,8 +257,10 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, cha
     return change_room_name((*((sys->SysRooms)+i)), new_name);
 }
 
-
-Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_name, int *time) {
+/************************************************************************
+ *                    *
+ ***********************************************************************/
+Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_name, int *time){
 
     if (sys == NULL || challenge_name == NULL) return NULL_PARAMETER;
     int j = NOT_FOUND;
@@ -243,8 +275,10 @@ Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_n
 
 }
 
+/************************************************************************
+ *                           *
+ ***********************************************************************/
 Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
-
     if(sys == NULL) return NULL_PARAMETER;
 
     int max_num_of_visitor_in_challenge=0;
