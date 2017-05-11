@@ -106,7 +106,7 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
     
     
     return OK;
-}
+} //not finished
 
 
 Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time)
@@ -132,10 +132,25 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time)
     visitor_quit_room(sys->linked_list->visitor, quit_time);
     sys->Systime=quit_time;
     return OK;
+} // not finished
+
+
+Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time)
+{
+    if (sys == NULL){
+        return NULL_PARAMETER;
+    }
+    int check;
+    while (sys->linked_list->next != NULL){
+        sys->linked_list=sys->linked_list->next;
+        check =visitor_quit(sys,sys->linked_list->visitor->visitor_id,quit_time);
+        if (check != OK){
+            return check;
+        }
+ 
+    }
+    return OK;
 }
-
-
-Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time);
 
 
 Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char **room_name)
