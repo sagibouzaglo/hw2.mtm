@@ -93,6 +93,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
 
 }
 
+
 /************************************************************************
  *                    *
  ***********************************************************************/
@@ -149,7 +150,7 @@ Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time){
     if (sys == NULL){
         return NULL_PARAMETER;
     }
-    int check;
+    Result check;
     while (sys->linked_list != NULL){
         sys->linked_list=sys->linked_list->next;
         check =visitor_quit(sys,sys->linked_list->visitor->visitor_id,quit_time);
