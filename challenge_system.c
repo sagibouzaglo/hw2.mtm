@@ -321,5 +321,6 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys){
     return OK;
     }
 }
-#endif // CHALLENGE_SYSTEM_H_
+
+
 
