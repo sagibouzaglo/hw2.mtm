@@ -123,22 +123,37 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
-    Node tmp_node;
+    Node tmp_node=malloc(sizeof(Node));
+    if (tmp_node == NULL){
+        return MEMORY_PROBLEM;
+    }
     tmp_node->next = sys->linked_list;
+    sys->linked_list=tmp_node;
     while(strcmp((sys->linked_list->visitor->visitor_name),visitor_name)!= 0){
         tmp_node->next=sys->linked_list->next;
-        /*break point in case visitor is not in list*/
+        if (linked_list->next == NULL){
+            return ILLEGAL_PARAMETER;
+        }
     }
     if (room_of_visitor(tmp_node->visitor,room_name)==NOT_IN_ROOM){
         return NOT_IN_ROOM;
     }
-    
-    
     return OK;
 }
 
 
-Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *new_name);
+Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *new_name)
+{
+    if ((sys == NULL)||(new_name == NULL)){
+        return NULL_PARAMETER;
+    }
+    
+    int check = change_name(,new_name);
+    if (check != OK){
+        return check;
+    }
+    
+}
 
 
 Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, char *new_name);
