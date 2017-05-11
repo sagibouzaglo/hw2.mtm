@@ -165,10 +165,11 @@ Result room_of_visitor(Visitor *visitor, char **room_name)
     if( (visitor == NULL) || (room_name == NULL) ) {
         return NULL_PARAMETER;
     }
-    *room_name=malloc(sizeof(char)*(strlen(*visitor->room_name)+1));
-    if (visitor->room_name == NULL) {         return MEMORY_PROBLEM;
-    }
     if(*visitor->room_name == NULL) return NOT_IN_ROOM;
+    *room_name=malloc(sizeof(char)*(strlen(*visitor->room_name)+1));
+    if (visitor->room_name == NULL) return MEMORY_PROBLEM;
+    
+    strcpy(*room_name,*visitor->room_name); //was missing, i think it's ok now
     return OK;
 }
 

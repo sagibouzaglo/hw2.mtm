@@ -5,7 +5,7 @@
 char *name;
 Challenge **SysChallenges;
 ChallengeRoom **SysRooms;
-struct node *linked_list;
+Node linked_list;
 int Systime;
 int Sysnum_of_challenges;
 int Sysnum_of_rooms;

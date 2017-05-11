@@ -115,7 +115,27 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time);
 Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time);
 
 
-Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char **room_name);
+Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char **room_name)
+{
+    if (sys == NULL){
+        return NULL_PARAMETER;
+    }
+    if ((visitor_name == NULL)||(room_name == NULL)){
+        return ILLEGAL_PARAMETER;
+    }
+    Node tmp_node;
+    tmp_node->next = sys->linked_list;
+    while(strcmp((sys->linked_list->visitor->visitor_name),visitor_name)!= 0){
+        tmp_node->next=sys->linked_list->next;
+        /*break point in case visitor is not in list*/
+    }
+    if (room_of_visitor(tmp_node->visitor,room_name)==NOT_IN_ROOM){
+        return NOT_IN_ROOM;
+    }
+    
+    
+    return OK;
+}
 
 
 Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *new_name);
