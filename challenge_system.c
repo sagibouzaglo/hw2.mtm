@@ -277,6 +277,3 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
     return OK;
 }
 
-
-#endif // CHALLENGE_SYSTEM_H_
-
