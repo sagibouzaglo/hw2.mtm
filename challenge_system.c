@@ -147,16 +147,40 @@ Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *n
     if ((sys == NULL)||(new_name == NULL)){
         return NULL_PARAMETER;
     }
-    
-    int check = change_name(,new_name);
+    int i=0;
+    while ((i<(sys->Sysnum_of_challenges))&&(challenge_id != ((*((sys->SysChallenges)+i))->id))){
+        i++;
+    }
+        if (i>=sys->Sysnum_of_challenges){
+            return ILLEGAL_PARAMETER;
+        }
+    int check = change_name((*((sys->SysChallenges)+i)),new_name);
     if (check != OK){
         return check;
     }
-    
+    return OK;
 }
 
 
-Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, char *new_name);
+Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, char *new_name)
+{
+    if ((sys == NULL)||(new_name == NULL)){
+        return NULL_PARAMETER;
+    }
+    int i=0;
+    while ((i<(sys->Sysnum_of_rooms))&&(strcmp(current_name,((*((sys->SysRooms)+i))->name))!=0)){
+        i++;
+    }
+    if (i>=sys->Sysnum_of_challenges){
+        return ILLEGAL_PARAMETER;
+    }
+    int check = change_room_name((*((sys->SysRooms)+i)), new_name);
+    if (check != OK){
+        return check;
+    }
+    return OK;
+
+}
 
 
 Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_name, int *time);
