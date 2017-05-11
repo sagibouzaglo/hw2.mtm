@@ -13,9 +13,6 @@
 
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
-/* open the data base file and take the imformation from it*/
-Result create_system(char *init_file, ChallengeRoomSystem **sys)
-{
 
 /************************************************************************
  * open the data base file and take the imformation from it             *
@@ -41,20 +38,28 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     }
 
     strcpy((*sys)->name, buffer);
-
+    Result checking_problems;
     int num_of_challenge = 0;
     int IDchallenge=0;
     Level level_chalenge=NULL;
 
     fscanf(input, "%d" ,&num_of_challenge);
     ((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
-    if(((*sys)->SysChallenges)== NULL) return MEMORY_PROBLEM;
+    if(((*sys)->SysChallenges)== NULL){
+        free((*sys)->name);
+        return MEMORY_PROBLEM;
+    }
     ((*sys)->Sysnum_of_challenges) = num_of_challenge;
 
     for(int i=0 ; i<num_of_challenge ; ++i ){
         fscanf(input , "%s %d %d" , buffer , &IDchallenge , &level_chalenge);
 
-        init_challenge(*(((*sys)->SysChallenges)+i), IDchallenge, buffer, level_chalenge);
+        checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), IDchallenge, buffer, level_chalenge);
+        if (checking_problems != OK){
+            free((*sys)->name);
+            free((*sys)->SysChallenges);
+            return checking_problems;
+        }
     }
     int num_of_room=0;
     int challenges_in_room=0;
@@ -63,11 +68,21 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     fscanf(input, "%d" ,&num_of_room);
     (*sys)-> = num_of_room;
     (*sys)->SysRooms=malloc(sizeof(ChallengeRoom)*num_of_room);
-    if ((*sys)->SysRooms == NULL) return MEMORY_PROBLEM;
+    if ((*sys)->SysRooms == NULL) {
+        free((*sys)->name);
+        free((*sys)->SysChallenges);
+        return MEMORY_PROBLEM;
+    }
 
     for(int i=0 ; i <num_of_room ; i++ ){
         fscanf(input , "%s %d" , buffer , &challenges_in_room );
-        init_room(*(((*sys)->SysRooms)+i),buffer,challenges_in_room);
+        checking_problems=init_room(*(((*sys)->SysRooms)+i),buffer,challenges_in_room);
+        if(checking_problems!=OK){
+            free((*sys)->name);
+            free((*sys)->SysChallenges);
+            free((*sys)->SysRooms);
+            return checking_problems;
+        }
 
 
         for(int j=0; j<challenges_in_room ;++j){
@@ -75,8 +90,13 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
             for(int k=0 ; k<num_of_challenge ; ++k ){
 
                 if((*sys)->(SysChallenges+k)->id == challenges_in_room){
-                    init_challenge_activity(*(((*sys)->(SysRooms+i)))->challenges,*(((*sys)->SysChallenges)+k));/*???? <-- ??*/
-
+                    checking_problems=init_challenge_activity(*(((*sys)->(SysRooms+i)))->challenges,*(((*sys)->SysChallenges)+k));/*???? <-- ??*/
+                    if (checking_problems!=OK){
+                        free((*sys)->name);
+                        free((*sys)->SysChallenges);
+                        free((*sys)->SysRooms);
+                        return checking_problems;
+                    }
                 }
             }
         }
