@@ -275,10 +275,10 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, cha
         return NULL_PARAMETER;
     }
     int i=0;
-    while ((i<(sys->Sysnum_of_rooms))&&(strcmp(current_name,((*((sys->SysRooms)+i))->name))!=0)){
+    while ((i<(sys->Sys_num_of_rooms)&&(strcmp(current_name,((*((sys->SysRooms)+i))->name))!=0)){
         i++;
     }
-    if (i>=sys->Sysnum_of_rooms){
+    if (i>=(sys->Sys_num_of_rooms)){
         return ILLEGAL_PARAMETER;
     }
     return change_room_name((*((sys->SysRooms)+i)), new_name);
