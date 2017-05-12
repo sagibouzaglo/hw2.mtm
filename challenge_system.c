@@ -40,6 +40,9 @@
                             }
 
 
+static Result create_all_rooms(ChallengeRoomSystem *sys);
+
+static Result create_all_challenges(ChallengeRoomSystem *sys);
 
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
@@ -348,7 +351,16 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys){
         }
     return OK;
     }
+/************************************************************************
+ *                           *
+ ***********************************************************************/
+static Result create_all_rooms(ChallengeRoomSystem *sys){
 
+}
 
+/************************************************************************
+ *                           *
+ ***********************************************************************/
+static Result create_all_challenges(ChallengeRoomSystem *sys){
 
-
+}
