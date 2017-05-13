@@ -43,12 +43,17 @@
                             return Result;\
                             }
 
+static Result create_all_rooms(ChallengeRoomSystem **sys, FILE* input,
+                               int num_of_room, char* buffer , int challenges_in_room,
+                               int IDs_challenge ,int num_of_challenge);
 
-static Result create_all_rooms(ChallengeRoomSystem *sys);
+static Result create_all_challenges(ChallengeRoomSystem **sys ,FILE* input,
+                                    int num_of_challenge,
+                                    int* id_challenge, Level *level_challenge,
+                                    char* buffer);
 
-static Result create_all_challenges(ChallengeRoomSystem *sys);
-
-static Result finde_visitor(ChallengeRoomSystem *sys,int visitor_id ,Visitor *visitor);
+static Result finde_visitor(ChallengeRoomSystem *sys,int visitor_id
+                            ,Visitor *visitor);
 
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
@@ -70,47 +75,21 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     CHECK ((*sys)->name ,input);
 
     strcpy((*sys)->name, buffer);
-    Result checking_problems;
+
     int num_of_challenge = 0;
     int id_challenge=0;
     Level level_challenge = Easy;
+    Result checking_problems=create_all_challenges(sys , input,  num_of_challenge, &id_challenge,  &level_challenge,  buffer);
+    CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
 
-    fscanf(input, "%d" ,&num_of_challenge);
-    ((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
-    CHECK_AND_FREE(((*sys)->SysChallenges),((*sys)->name),input);
-    ((*sys)->Sysnum_of_challenges) = num_of_challenge;
-
-    for(int i=0 ; i<num_of_challenge ; ++i ){
-        fscanf(input , "%s %d %d" , buffer , &id_challenge , &level_challenge);
-
-        checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), id_challenge, buffer, level_challenge);
-        CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
-    }
     int num_of_room=0;
     int challenges_in_room=0;
     int IDs_challenge=0;
 
-    fscanf(input, "%d" ,&num_of_room);
-    (*sys)->Sys_num_of_rooms = num_of_room;
-    (*sys)->SysRooms=malloc(sizeof(ChallengeRoom)*num_of_room);
-    CHECK_AND_2FREE(((*sys)->SysRooms),((*sys)->name),((*sys)->SysChallenges),input);
+    checking_problems=create_all_rooms(sys, input,num_of_room, buffer ,
+                            challenges_in_room, IDs_challenge ,num_of_challenge);
+    CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
 
-    for(int i=0 ; i <num_of_room ; i++ ){
-        fscanf(input , "%s %d" , buffer , &challenges_in_room );
-        checking_problems=init_room(*(((*sys)->SysRooms)+i),buffer,challenges_in_room);
-        CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
-
-        for(int j=0; j<challenges_in_room ;++j){
-            fscanf(input , "%d" , &IDs_challenge);
-            for(int k=0 ; k<num_of_challenge ; ++k ){
-
-                if((*sys)->(SysChallenges+k)->id == challenges_in_room){
-                    checking_problems=init_challenge_activity(*(((*sys)->(SysRooms+i)))->challenges,*(((*sys)->SysChallenges)+k));/*???? <-- ??*/
-                    CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
-                }
-            }
-        }
-    }
     fclose(input);
     return OK;
 }
@@ -185,7 +164,7 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
     }
     return  visitor_enter_room(room,visitor,level,start_time);
 
-} 
+}
 
 /************************************************************************
  * visitor is exiting the room and saving his best time.                *
@@ -358,15 +337,49 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys){
 /************************************************************************
  *                           *
  ***********************************************************************/
-static Result create_all_rooms(ChallengeRoomSystem *sys){
+static Result create_all_rooms(ChallengeRoomSystem **sys, FILE* input,
+                               int num_of_room, char* buffer , int challenges_in_room,
+                               int IDs_challenge ,int num_of_challenge){
+    fscanf(input, "%d" ,&num_of_room);
+    (*sys)->Sys_num_of_rooms = num_of_room;
+    (*sys)->SysRooms=malloc(sizeof(ChallengeRoom)*num_of_room);
+    CHECK_AND_2FREE(((*sys)->SysRooms),((*sys)->name),((*sys)->SysChallenges),input);
 
+    for(int i=0 ; i <num_of_room ; i++ ){
+        fscanf(input , "%s %d" , buffer , &challenges_in_room );
+        Result checking_problems=init_room(*(((*sys)->SysRooms)+i),buffer,challenges_in_room);
+        CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
+
+        for(int j=0; j<challenges_in_room ;++j){
+            fscanf(input , "%d" , &IDs_challenge);
+            for(int k=0 ; k<num_of_challenge ; ++k ){
+
+                if((*sys)->(SysChallenges+k)->id == challenges_in_room){
+                    checking_problems=init_challenge_activity(*(((*sys)->(SysRooms+i)))->challenges,*(((*sys)->SysChallenges)+k));/*???? <-- ??*/
+                    CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
+                }
+            }
+        }
+    }
+    return  OK;
 }
 
 /************************************************************************
  *                           *
  ***********************************************************************/
-static Result create_all_challenges(ChallengeRoomSystem *sys){
+static Result create_all_challenges(ChallengeRoomSystem **sys,FILE* input, int num_of_challenge,
+int* id_challenge, Level *level_challenge, char* buffer){
+    fscanf(input, "%d" ,&num_of_challenge);
+    ((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
+    CHECK_AND_FREE(((*sys)->SysChallenges),((*sys)->name),input);
+    ((*sys)->Sysnum_of_challenges) = num_of_challenge;
+    Result checking_problems;
+    for(int i=0 ; i<num_of_challenge ; ++i ){
+        fscanf(input , "%s %d %d" , buffer , id_challenge , level_challenge);
 
+        checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), *id_challenge, buffer, *level_challenge);
+        CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
+    }
 }
 
 /************************************************************************
