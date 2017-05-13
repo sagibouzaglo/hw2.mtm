@@ -16,8 +16,7 @@
 #define CHECK(ptr,file)  if(! ptr) {\
                             fclose(file);\
                             return MEMORY_PROBLEM;\
-                            };
-
+                            }
 #define CHECK_AND_2FREE(ptr,ptr2,ptr3,file) if(! ptr) {\
                             fclose(file);\
                             free(ptr2);\
