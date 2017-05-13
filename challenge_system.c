@@ -383,6 +383,7 @@ int* id_challenge, Level *level_challenge, char* buffer){
         checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), *id_challenge, buffer, *level_challenge);
         CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
     }
+    return OK;
 }
 
 /************************************************************************
