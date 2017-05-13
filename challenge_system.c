@@ -170,11 +170,22 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
 
     Result checking_problems = visitor_enter_room(sys->(*SysRooms),sys->linked_list->visitor,level,start_time);
     if(!checking_problems){}
-    Visitor visitor;
-    
-    
-    return OK;
-} //not finished
+    Visitor *visitor = malloc(sizeof(Visitor));
+    if (visitor == NULL) return MEMORY_PROBLEM;
+
+    checking_problems = finde_visitor(sys,visitor_id,visitor);
+    if (checking_problems != OK) return checking_problems;
+    ChallengeRoom *room=malloc(sizeof(ChallengeRoom));
+    if (room == NULL) return MEMORY_PROBLEM;
+    for (int i =0; i<sys->Sys_num_of_rooms ; ++i ){
+        if((sys->(SysRooms+i)->name) == room_name){
+            room = (sys->(SysRooms+i));
+            break;
+        }
+    }
+    return  visitor_enter_room(room,visitor,level,start_time);
+
+} 
 
 /************************************************************************
  * visitor is exiting the room and saving his best time.                *
