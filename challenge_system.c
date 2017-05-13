@@ -165,8 +165,9 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
-    Result checking_problems = visitor_enter_room(sys->SysRooms,sys->linked_list->visitor,level,start_time);
 
+    Result checking_problems = visitor_enter_room(sys->(*SysRooms),sys->linked_list->visitor,level,start_time);
+    if(!checking_problems){}
     Visitor visitor;
     
     
