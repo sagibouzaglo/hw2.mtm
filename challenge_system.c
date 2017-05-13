@@ -10,10 +10,14 @@
 
 #define ROW_LENGTH 51
 #define NOT_FOUND -1
+#define CHECK_NULL(ptr) if(ptr==NULL){\
+                            return NULL_PARAMETER;\
+                            }
 #define CHECK(ptr,file)  if(! ptr) {\
                             fclose(file);\
                             return MEMORY_PROBLEM;\
                             };
+
 #define CHECK_AND_2FREE(ptr,ptr2,ptr3,file) if(! ptr) {\
                             fclose(file);\
                             free(ptr2);\
@@ -51,16 +55,12 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys);
  * open the data base file and take the imformation from it             *
  ***********************************************************************/
 Result create_system(char *init_file, ChallengeRoomSystem **sys){
-
-    if((*sys)== NULL) return NULL_PARAMETER;
-
+    CHECK_NULL(*sys);
     ((*sys)->(Systime)) = 0;
     char buffer[ROW_LENGTH];
 
     FILE *input = fopen(init_file, "r");
-    if (input == NULL) {
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(input);
     fscanf(input, "%s" ,buffer);
     CHECK (buffer,input);
 
@@ -161,14 +161,11 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
  *                    *
  ***********************************************************************/
 Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_name, int visitor_id, Level level, int start_time){
-    if (sys == NULL){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(sys);
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
     Visitor visitor;
-    /* need to use system_room_of_visitor */
     
     
     return OK;
@@ -182,9 +179,7 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
     if (((quit_time<0)||(quit_time<=(sys->Systime)))&&(sys!=NULL)){
         return ILLEGAL_TIME;
     }
-    if (sys == NULL){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(sys);
     Node tmp_node=malloc(sizeof(Node));
     if (tmp_node == NULL){
         return MEMORY_PROBLEM;
@@ -210,9 +205,7 @@ Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time){
     if (((quit_time<0)||(quit_time<=(sys->Systime)))&&(sys!=NULL)){
         return ILLEGAL_TIME;
     }
-    if (sys == NULL){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(sys);
     Result check;
     while (sys->linked_list != NULL){
         sys->linked_list=sys->linked_list->next;
@@ -229,9 +222,7 @@ Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time){
  * using "room_of_visitor" to find the room the visitr is staying in    *
  ***********************************************************************/
 Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char **room_name){
-    if (sys == NULL){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(sys);
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
@@ -257,9 +248,8 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char
  * finding the relevant challenge and change it's name                  *
  ***********************************************************************/
 Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *new_name){
-    if ((sys == NULL)||(new_name == NULL)){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(sys);
+    CHECK_NULL(new_name);
     int i=0;
     while ((i<(sys->Sysnum_of_challenges))&&(challenge_id != ((*((sys->SysChallenges)+i))->id))){
         i++;
@@ -274,11 +264,10 @@ Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *n
  * finding the relevant room and change it's name                       *
  ***********************************************************************/
 Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, char *new_name){
-    if ((sys == NULL)||(new_name == NULL)){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(sys);
+    CHECK_NULL(new_name);
     int i=0;
-    while ((i<(sys->Sys_num_of_rooms)&&(strcmp(current_name,((*((sys->SysRooms)+i))->name))!=0)){
+    while ((i<(sys->Sys_num_of_rooms)&&(strcmp(current_name,((*((sys->SysRooms)+i))->name))!=0))){
         i++;
     }
     if (i>=(sys->Sys_num_of_rooms)){
@@ -291,8 +280,8 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, cha
  *                    *
  ***********************************************************************/
 Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_name, int *time){
-
-    if (sys == NULL || challenge_name == NULL) return NULL_PARAMETER;
+    CHECK_NULL(sys);
+    CHECK_NULL(challenge_name);
     int j = NOT_FOUND;
     for (int i = 0; i < (sys->Sysnum_of_challenges); ++i) {
         if (strcmp(challenge_name, ((*(sys->SysChallenges + i))->name)) == 0){
@@ -309,8 +298,7 @@ Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_n
  *                           *
  ***********************************************************************/
 Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
-    if(sys == NULL) return NULL_PARAMETER;
-
+    CHECK_NULL(sys);
     int max_num_of_visitor_in_challenge=0;
     int visits=0;
     int j = 0;
@@ -343,7 +331,7 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
  *                           *
  ***********************************************************************/
 static Result reset_all_rooms(ChallengeRoomSystem *sys){
-    if(sys == NULL) return NULL_PARAMETER;
+    CHECK_NULL(sys);
     Result check;
     for(int i =0; i<((sys)->Sys_num_of_rooms) ; ++i){
         check=reset_room(*(((sys)->SysRooms)+i));

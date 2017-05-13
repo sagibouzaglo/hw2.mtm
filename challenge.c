@@ -6,19 +6,20 @@
 
 
 #include "challenge.h"
-
+#define CHECK_NULL(ptr) if(ptr==NULL){\
+                            return NULL_PARAMETER;\
+                            }
+#define CHECK_MEMORY(ptr) if(ptr==NULL){\
+                            return NULL_PARAMETER;\
+                            }
 /************************************************************************
  * insialise challege struct to 0                                       *
  ***********************************************************************/
 Result init_challenge(Challenge *challenge, int id, char *name, Level level){
-    if ((challenge == NULL) || (name == NULL)){
-        return NULL_PARAMETER;
-    }
-    
+    CHECK_NULL(name);
+    CHECK_NULL(challenge);
     char* name_copy = malloc((strlen(name)+1)*sizeof(char));
-    if (name_copy == NULL){
-        return MEMORY_PROBLEM;
-    }
+    CHECK_MEMORY(name_copy);
     
     memcpy(name_copy, name, (strlen(name)+1));
     challenge->id = id;
@@ -33,12 +34,9 @@ Result init_challenge(Challenge *challenge, int id, char *name, Level level){
  * reset challege struct to 0                                          *
  **********************************************************************/
 Result reset_challenge(Challenge *challenge){
-    if (challenge == NULL){
-        return NULL_PARAMETER;
-    } else {
-        free(challenge->name);
-        memset(challenge, 0, sizeof(*challenge));
-    }
+    CHECK_NULL(challenge);
+    free(challenge->name);
+    memset(challenge, 0, sizeof(*challenge));
     return OK;
 }
 
@@ -46,14 +44,10 @@ Result reset_challenge(Challenge *challenge){
  * changing the name of challenge                                       *
  ***********************************************************************/
 Result change_name(Challenge *challenge, char *name){
-    if ((challenge == NULL) || (name == NULL)){
-        return NULL_PARAMETER;
-    }
-    
+    CHECK_NULL(challenge);
+    CHECK_NULL(name);
     char* name_copy = malloc((1+strlen(name))*sizeof(char));
-    if (name_copy == NULL){
-        return MEMORY_PROBLEM;
-    }
+    CHECK_MEMORY(name_copy);
     memcpy(name_copy, name, (1+strlen(name)));
     free(challenge->name);
     challenge->name = name_copy;
@@ -64,9 +58,7 @@ Result change_name(Challenge *challenge, char *name){
  * set best time for challenge                                          *
  ***********************************************************************/
 Result set_best_time_of_challenge(Challenge *challenge, int time){
-    if (challenge == NULL){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(challenge);
     if (time < 0){
         return ILLEGAL_PARAMETER;
     }
@@ -80,11 +72,8 @@ Result set_best_time_of_challenge(Challenge *challenge, int time){
  * return the best time for a challenge                                 *
  ***********************************************************************/
 Result best_time_of_challenge(Challenge *challenge, int *time){
-    if (challenge == NULL){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(challenge);
     *time=challenge->best_time;
-    
     return OK;
 }
 
@@ -92,9 +81,7 @@ Result best_time_of_challenge(Challenge *challenge, int *time){
  * add +1 to visitors count                                             *
  ***********************************************************************/
 Result inc_num_visits(Challenge *challenge){
-    if (challenge == NULL){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(challenge);
     challenge->num_visits++;
     return OK;
 }
@@ -103,10 +90,7 @@ Result inc_num_visits(Challenge *challenge){
  * return visits amount                                                 *
  ***********************************************************************/
 Result num_visits(Challenge *challenge, int *visits){
-    if (challenge == NULL){
-        return NULL_PARAMETER;
-    }
+    CHECK_NULL(challenge);
     *visits=challenge->num_visits;
-    
     return OK;
 }
