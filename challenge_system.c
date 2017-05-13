@@ -66,7 +66,7 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys);
  ***********************************************************************/
 Result create_system(char *init_file, ChallengeRoomSystem **sys){
     CHECK_NULL(*sys);
-    ((*sys)->(Systime)) = 0;
+    (*sys)->Systime = 0;
     char buffer[ROW_LENGTH];
 
     FILE *input = fopen(init_file, "r");
@@ -356,8 +356,8 @@ static Result create_all_rooms(ChallengeRoomSystem **sys, FILE* input,
             fscanf(input , "%d" , &IDs_challenge);
             for(int k=0 ; k<num_of_challenge ; ++k ){
 
-                if((*sys)->(SysChallenges+k)->id == challenges_in_room){
-                    checking_problems=init_challenge_activity(*(((*sys)->(SysRooms+i)))->challenges,*(((*sys)->SysChallenges)+k));/*???? <-- ??*/
+                if((*((*sys)->SysChallenges)+k)->id == challenges_in_room){
+                    checking_problems=init_challenge_activity(((*((*sys)->SysRooms)+i)->challenges),(*((*sys)->SysChallenges)+k));/*???? <-- ??*/
                     CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
                 }
             }
