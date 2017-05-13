@@ -54,7 +54,8 @@ static Result create_all_challenges(ChallengeRoomSystem **sys ,FILE* input,
                                     int* id_challenge, Level *level_challenge,
                                     char* buffer);
 
-static Result create_all_challenges(ChallengeRoomSystem *sys);
+static Result create_all_challenges(ChallengeRoomSystem **sys,FILE* input, int num_of_challenge,
+                                    int* id_challenge, Level *level_challenge, char* buffer);
 
 static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id ,Visitor *visitor);
 
