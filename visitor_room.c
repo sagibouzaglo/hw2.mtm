@@ -8,11 +8,11 @@
 #include "visitor_room.h"
 
 #define CHECK_NULL(ptr) if(ptr==NULL){\
-return NULL_PARAMETER;\
-}
+                            return NULL_PARAMETER;\
+                            }
 #define CHECK_MEMORY(ptr) if(ptr==NULL){\
-return NULL_PARAMETER;\
-}
+                                return MEMORY_PROBLEM;\
+                                }
 
 /************************************************************************
  * inisialise challenge activity to 0                                   *
@@ -22,7 +22,7 @@ Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge
     CHECK_NULL(activity);
     activity->challenge = challenge;
     activity->start_time = 0;
-    activity->visitor = NULL;
+    activity->visitor = NULL; 
     return OK;
 }
 

@@ -10,7 +10,7 @@
                             return NULL_PARAMETER;\
                             }
 #define CHECK_MEMORY(ptr) if(ptr==NULL){\
-                            return NULL_PARAMETER;\
+                            return MEMORY_PROBLEM;\
                             }
 /************************************************************************
  * insialise challege struct to 0                                       *

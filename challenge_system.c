@@ -13,6 +13,9 @@
 #define CHECK_NULL(ptr) if(ptr==NULL){\
                             return NULL_PARAMETER;\
                             }
+#define CHECK_MEMORY(ptr) if(ptr==NULL){\
+                                return MEMORY_PROBLEM;\
+                                }
 #define CHECK(ptr,file)  if(! ptr) {\
                             fclose(file);\
                             return MEMORY_PROBLEM;\
@@ -47,7 +50,7 @@ static Result create_all_rooms(ChallengeRoomSystem *sys);
 
 static Result create_all_challenges(ChallengeRoomSystem *sys);
 
-static Result finde_visitor(ChallengeRoomSystem *sys,int visitor_id ,Visitor *visitor);
+static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id ,Visitor *visitor);
 
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
@@ -166,23 +169,29 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
-
-    Result checking_problems = visitor_enter_room(sys->(*SysRooms),sys->linked_list->visitor,level,start_time);
-    if(!checking_problems){}
     Visitor *visitor = malloc(sizeof(Visitor));
-    if (visitor == NULL) return MEMORY_PROBLEM;
-
-    checking_problems = finde_visitor(sys,visitor_id,visitor);
+    CHECK_MEMORY(visitor);
+    Result checking_problems = find_visitor(sys,visitor_id,visitor);
     if (checking_problems != OK) return checking_problems;
     ChallengeRoom *room=malloc(sizeof(ChallengeRoom));
-    if (room == NULL) return MEMORY_PROBLEM;
+    CHECK_MEMORY(room);
     for (int i =0; i<sys->Sys_num_of_rooms ; ++i ){
-        if((sys->(SysRooms+i)->name) == room_name){
-            room = (sys->(SysRooms+i));
+        if( (*((sys->SysRooms)+i))->name == room_name){
+            room = *((sys->SysRooms)+i);
             break;
         }
     }
-    return  visitor_enter_room(room,visitor,level,start_time);
+    checking_problems=visitor_enter_room(room,visitor,level,start_time);
+    if (checking_problems != OK){
+        return checking_problems;
+    }
+    Node tmp_node=malloc(sizeof(Node));
+    CHECK_MEMORY(tmp_node);
+    tmp_node->next = sys->linked_list;
+    sys->linked_list=tmp_node;
+    free(room);
+    free(visitor);
+    return  OK;
 
 } 
 
@@ -195,12 +204,7 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
         return ILLEGAL_TIME;
     }
     CHECK_NULL(sys);
-    Node tmp_node=malloc(sizeof(Node));
-    if (tmp_node == NULL){
-        return MEMORY_PROBLEM;
-    }
-    tmp_node->next = sys->linked_list;
-    sys->linked_list=tmp_node;
+    Node tmp_node;
     while((sys->linked_list->visitor->visitor_id)!= visitor_id){
         tmp_node->next=sys->linked_list->next;
         if (linked_list->next == NULL){
@@ -242,9 +246,7 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char
         return ILLEGAL_PARAMETER;
     }
     Node tmp_node=malloc(sizeof(Node));
-    if (tmp_node == NULL){
-        return MEMORY_PROBLEM;
-    }
+    CHECK_MEMORY(tmp_node);
     tmp_node->next = sys->linked_list;
     sys->linked_list=tmp_node;
     while(strcmp((sys->linked_list->visitor->visitor_name),visitor_name)!= 0){
@@ -371,15 +373,12 @@ static Result create_all_challenges(ChallengeRoomSystem *sys){
 /************************************************************************
  *                           *
  ***********************************************************************/
-static Result finde_visitor(ChallengeRoomSystem *sys,int visitor_id, Visitor *visitor){
+static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id, Visitor *visitor){
     CHECK_NULL (sys);
 
     Node tmp_node=malloc(sizeof(Node));
-    if (tmp_node == NULL){
-        return MEMORY_PROBLEM;
-    }
+    CHECK_MEMORY(tmp_node);
     tmp_node->next = sys->linked_list;
-    sys->linked_list=tmp_node;
     while((sys->linked_list->visitor->visitor_id)!= visitor_id){
         tmp_node->next=sys->linked_list->next;
         if (linked_list->next == NULL){
@@ -387,5 +386,6 @@ static Result finde_visitor(ChallengeRoomSystem *sys,int visitor_id, Visitor *vi
         }
     }
     visitor = (sys->linked_list->visitor);
+    free(tmp_node);
     return OK;
 }
