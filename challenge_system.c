@@ -71,7 +71,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     Result checking_problems;
     int num_of_challenge = 0;
     int id_challenge=0;
-    Level level_chalenge=NULL;
+    Level level_challenge = Easy;
 
     fscanf(input, "%d" ,&num_of_challenge);
     ((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
@@ -79,9 +79,9 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     ((*sys)->Sysnum_of_challenges) = num_of_challenge;
 
     for(int i=0 ; i<num_of_challenge ; ++i ){
-        fscanf(input , "%s %d %d" , buffer , &id_challenge , &level_chalenge);
+        fscanf(input , "%s %d %d" , buffer , &id_challenge , &level_challenge);
 
-        checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), id_challenge, buffer, level_chalenge);
+        checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), id_challenge, buffer, level_challenge);
         CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
     }
     int num_of_room=0;
@@ -165,6 +165,8 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
+    Result checking_problems = visitor_enter_room(sys->SysRooms,sys->linked_list->visitor,level,start_time);
+
     Visitor visitor;
     
     
@@ -176,7 +178,7 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
  * alse the system realese memory and change the linked list            *
  ***********************************************************************/
 Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
-    if (((quit_time<0)||(quit_time<=(sys->Systime)))&&(sys!=NULL)){
+    if (((quit_time<0)||(quit_time<=(sys->Systime)))&&(sys != NULL)){
         return ILLEGAL_TIME;
     }
     CHECK_NULL(sys);
