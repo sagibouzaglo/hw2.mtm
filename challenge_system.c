@@ -47,6 +47,8 @@ static Result create_all_rooms(ChallengeRoomSystem *sys);
 
 static Result create_all_challenges(ChallengeRoomSystem *sys);
 
+static Result finde_visitor(ChallengeRoomSystem *sys,int visitor_id ,Visitor *visitor);
+
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
 
@@ -164,8 +166,9 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
-    Result checking_problems = visitor_enter_room(sys->SysRooms,sys->linked_list->visitor,level,start_time);
 
+    Result checking_problems = visitor_enter_room(sys->(*SysRooms),sys->linked_list->visitor,level,start_time);
+    if(!checking_problems){}
     Visitor visitor;
     
     
@@ -352,4 +355,26 @@ static Result create_all_rooms(ChallengeRoomSystem *sys){
  ***********************************************************************/
 static Result create_all_challenges(ChallengeRoomSystem *sys){
 
+}
+
+/************************************************************************
+ *                           *
+ ***********************************************************************/
+static Result finde_visitor(ChallengeRoomSystem *sys,int visitor_id, Visitor *visitor){
+    CHECK_NULL (sys);
+
+    Node tmp_node=malloc(sizeof(Node));
+    if (tmp_node == NULL){
+        return MEMORY_PROBLEM;
+    }
+    tmp_node->next = sys->linked_list;
+    sys->linked_list=tmp_node;
+    while((sys->linked_list->visitor->visitor_id)!= visitor_id){
+        tmp_node->next=sys->linked_list->next;
+        if (linked_list->next == NULL){
+            return ILLEGAL_PARAMETER;
+        }
+    }
+    visitor = (sys->linked_list->visitor);
+    return OK;
 }
