@@ -51,11 +51,9 @@ static Result create_all_rooms(ChallengeRoomSystem **sys, FILE* input,
 
 static Result create_all_challenges(ChallengeRoomSystem **sys ,FILE* input,
                                     int num_of_challenge,
-                                    int* id_challenge, Level *level_challenge,
+                                    int* id_challenge, int level_challenge,
                                     char* buffer);
 
-static Result create_all_challenges(ChallengeRoomSystem **sys,FILE* input, int num_of_challenge,
-                                    int* id_challenge, Level *level_challenge, char* buffer);
 
 static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id ,Visitor *visitor);
 
@@ -82,8 +80,8 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
 
     int num_of_challenge = 0;
     int id_challenge=0;
-    Level level_challenge = Easy;
-    Result checking_problems=create_all_challenges(sys , input,  num_of_challenge, &id_challenge,  &level_challenge,  buffer);
+    int level_challenge = 0;
+    Result checking_problems=create_all_challenges(sys , input,  num_of_challenge, &id_challenge,  level_challenge,  buffer);
     CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
 
     int num_of_room=0;
@@ -371,16 +369,16 @@ static Result create_all_rooms(ChallengeRoomSystem **sys, FILE* input,
  *                           *
  ***********************************************************************/
 static Result create_all_challenges(ChallengeRoomSystem **sys,FILE* input, int num_of_challenge,
-int* id_challenge, Level *level_challenge, char* buffer){
+int* id_challenge, int level_challenge, char* buffer){
     fscanf(input, "%d" ,&num_of_challenge);
     ((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
     CHECK_AND_FREE(((*sys)->SysChallenges),((*sys)->name),input);
     ((*sys)->Sysnum_of_challenges) = num_of_challenge;
     Result checking_problems;
     for(int i=0 ; i<num_of_challenge ; ++i ){
-        fscanf(input , "%s %d %d" , buffer , id_challenge , level_challenge);
+        fscanf(input , "%s %d %d" , buffer , id_challenge , &level_challenge);
 
-        checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), *id_challenge, buffer, *level_challenge);
+        checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), *id_challenge, buffer, (Level)level_challenge);
         CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
     }
     return OK;
