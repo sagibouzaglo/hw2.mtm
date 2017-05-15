@@ -43,6 +43,7 @@ Result reset_challenge_activity(ChallengeActivity *activity){
 Result init_visitor(Visitor *visitor, char *name, int id){
     CHECK_NULL(visitor);
     CHECK_NULL(name);
+
     visitor->visitor_name = malloc(sizeof(char)*(strlen(name)+1));
     CHECK_MEMORY(visitor->visitor_name);
     visitor->room_name = malloc(sizeof(char*));
@@ -64,7 +65,7 @@ Result reset_visitor(Visitor *visitor){
     visitor->current_challenge = NULL;
     free(visitor->visitor_name);
     visitor->room_name = NULL;
-
+    free(visitor);
     return OK;
 }
 
@@ -141,7 +142,7 @@ Result change_room_name(ChallengeRoom *room, char *new_name){
 Result room_of_visitor(Visitor *visitor, char **room_name){
     CHECK_NULL(visitor);
     CHECK_NULL(room_name);
-    if(*visitor->room_name == NULL) return NOT_IN_ROOM;
+    if(visitor->room_name == NULL) return NOT_IN_ROOM;
     *room_name=malloc(sizeof(char)*(strlen(*visitor->room_name)+1));
     CHECK_MEMORY(visitor->room_name);
     strcpy(*room_name,*visitor->room_name);
