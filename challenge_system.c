@@ -63,10 +63,9 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys);
  * open the data base file and take the imformation from it             *
  ***********************************************************************/
 Result create_system(char *init_file, ChallengeRoomSystem **sys){
-    *sys = malloc(sizeof(ChallengeRoomSystem*));
-    CHECK_MEMORY(*sys);
-   ((*sys)->linked_list)=malloc(sizeof(Node));
-    CHECK_MEMORY( (*sys)->linked_list);
+    *sys = malloc(sizeof(ChallengeRoomSystem));
+    CHECK_MEMORY(sys);
+
 
     (*sys)->Systime = 0;
     char buffer[ROW_LENGTH];
@@ -384,7 +383,7 @@ static Result create_all_rooms(ChallengeRoomSystem **sys, FILE* input,
 static Result create_all_challenges(ChallengeRoomSystem **sys,FILE* input, int num_of_challenge,
 int id_challenge, int level_challenge, char* buffer){
     fscanf(input, "%d" ,&num_of_challenge);
-    *((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
+    (*sys)->SysChallenges=malloc(sizeof(Challenge)*num_of_challenge);
     CHECK_AND_FREE(((*sys)->SysChallenges),((*sys)->name),input);
     ((*sys)->Sysnum_of_challenges) = num_of_challenge;
     Result checking_problems;

@@ -72,7 +72,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "282"
-            endingLineNumber = "282">
+            endingLineNumber = "282"
+            landmarkName = "change_system_room_name()"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -104,6 +106,22 @@
             startingLineNumber = "360"
             endingLineNumber = "360"
             landmarkName = "create_all_rooms()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "challenge_system.c"
+            timestampString = "516546703.102418"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "94"
+            endingLineNumber = "94"
+            landmarkName = "create_system()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
