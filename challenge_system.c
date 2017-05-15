@@ -359,6 +359,9 @@ static Result create_all_rooms(ChallengeRoomSystem **sys, FILE* input,
     CHECK_AND_2FREE(((*sys)->SysRooms),((*sys)->name),((*sys)->SysChallenges),input);
 
     for(int i=0 ; i <num_of_room ; i++ ){
+
+        *(((*sys)->SysRooms)+i) = malloc(sizeof(ChallengeRoom));
+        CHECK_AND_2FREE(*(((*sys)->SysRooms)+i),((*sys)->name),((*sys)->SysChallenges),input);
         fscanf(input , "%s %d" , buffer , &challenges_in_room );
         Result checking_problems=init_room(*(((*sys)->SysRooms)+i),buffer,challenges_in_room);
         CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
@@ -389,7 +392,7 @@ int id_challenge, int level_challenge, char* buffer){
     Result checking_problems;
     for(int i=0 ; i<num_of_challenge ; ++i ){
         *(((*sys)->SysChallenges)+i)=malloc(sizeof(Challenge));
-
+        CHECK_AND_FREE( *(((*sys)->SysChallenges)+i),((*sys)->name),input);
         fscanf(input , "%s %d %d" , buffer , &id_challenge , &level_challenge);
         --level_challenge;
         checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), id_challenge, buffer, (Level)level_challenge);
