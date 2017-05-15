@@ -2,7 +2,7 @@
 #define VISITOR_ROOM_H_
 
 #include <stdio.h>
-#include <malloc/malloc.h>
+#include <malloc.h>
 #include <string.h>
 #include <assert.h>
 
