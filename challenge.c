@@ -3,7 +3,7 @@
 #include <string.h>
 #include <assert.h>
 
-
+#include "challenge_system.h"
 #include "challenge.h"
 #define CHECK_NULL(ptr) if(ptr==NULL){\
                             return NULL_PARAMETER;\
