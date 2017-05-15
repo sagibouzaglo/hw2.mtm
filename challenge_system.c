@@ -64,15 +64,16 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys);
  * open the data base file and take the imformation from it             *
  ***********************************************************************/
 Result create_system(char *init_file, ChallengeRoomSystem **sys){
-    sys = malloc(sizeof(ChallengeRoomSystem*));
+    *sys = malloc(sizeof(ChallengeRoomSystem*));
     CHECK_MEMORY(*sys);
    ((*sys)->linked_list)=malloc(sizeof(Node));
     CHECK_MEMORY( (*sys)->linked_list);
 
     (*sys)->Systime = 0;
     char buffer[ROW_LENGTH];
-
-    FILE *input = fopen(init_file, "r");
+    
+    FILE *input;
+    input =fopen(init_file, "r");
     CHECK_NULL(input);
     fscanf(input, "%s" ,buffer);
     CHECK (*buffer,input);
