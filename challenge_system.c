@@ -377,7 +377,7 @@ int* id_challenge, int level_challenge, char* buffer){
     Result checking_problems;
     for(int i=0 ; i<num_of_challenge ; ++i ){
         fscanf(input , "%s %d %d" , buffer , id_challenge , &level_challenge);
-
+        --level_challenge;
         checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), *id_challenge, buffer, (Level)level_challenge);
         CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
     }
