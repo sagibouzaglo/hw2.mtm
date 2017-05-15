@@ -48,13 +48,13 @@ static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input,
                                int num_of_room, char* buffer , int challenges_in_room,
                                int IDs_challenge ,int num_of_challenge);
 
-static Result create_all_challenges(ChallengeRoomSystem **sys ,FILE* input,
+static Result create_all_challenges(ChallengeRoomSystem *sys ,FILE* input,
                                     int num_of_challenge,
                                     int id_challenge, int level_challenge,
                                     char* buffer);
 
 
-static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id ,Visitor *visitor);
+static Result find_visitor(ChallengeRoomSystem **sys,int visitor_id ,Visitor *visitor);
 
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
@@ -63,8 +63,8 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys);
  * open the data base file and take the imformation from it             *
  ***********************************************************************/
 Result create_system(char *init_file, ChallengeRoomSystem **sys){
-    (*sys) = malloc(sizeof(ChallengeRoomSystem));
-    (*sys)->Systime=0;
+    *sys=malloc(sizeof(ChallengeRoomSystem));
+    ((*sys)->Systime)=0;
 
 
     char buffer[ROW_LENGTH];
@@ -85,7 +85,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     int num_of_challenge = 0;
     int id_challenge=0;
     int level_challenge = 0;
-    Result checking_problems=create_all_challenges(sys , input,  num_of_challenge, id_challenge,  level_challenge,  buffer);
+    Result checking_problems=create_all_challenges(*sys , input,  num_of_challenge, id_challenge,  level_challenge,  buffer);
     CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
 
     int num_of_room=0;
@@ -153,12 +153,12 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
         return ILLEGAL_PARAMETER;
     }
 
-    Visitor *visitor=malloc(sizeof(Visitor));
+    Visitor* visitor = malloc(sizeof(Visitor*));
     CHECK_MEMORY(visitor);
 
-    visitor=(sys->linked_list->visitor);
 
-    Result checking_problems = find_visitor(sys,visitor_id,visitor);
+
+    Result checking_problems = find_visitor(&sys,visitor_id,visitor);
     if (checking_problems != ILLEGAL_PARAMETER) return ALREADY_IN_ROOM;
 
     ChallengeRoom *room=malloc(sizeof(ChallengeRoom));
@@ -383,20 +383,20 @@ static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input,
 /************************************************************************
  *                           *
  ***********************************************************************/
-static Result create_all_challenges(ChallengeRoomSystem **sys,FILE* input, int num_of_challenge,
+static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input, int num_of_challenge,
 int id_challenge, int level_challenge, char* buffer){
     fscanf(input, "%d" ,&num_of_challenge);
-    ((*sys)->SysChallenges)=malloc(sizeof(Challenge)*num_of_challenge);
-    CHECK_AND_FREE(((*sys)->SysChallenges),((*sys)->name),input);
-    ((*sys)->Sysnum_of_challenges) = num_of_challenge;
+    ((sys)->SysChallenges)=malloc(sizeof(Challenge*)*num_of_challenge);
+    CHECK_AND_FREE(*((sys)->SysChallenges),((sys)->name),input);
+    ((sys)->Sysnum_of_challenges) = num_of_challenge;
     Result checking_problems;
     for(int i=0 ; i<num_of_challenge ; ++i ){
-        *(((*sys)->SysChallenges)+i)=malloc(sizeof(Challenge*));
-        CHECK_AND_FREE( *(((*sys)->SysChallenges)+i),((*sys)->name),input);
+        *(((sys)->SysChallenges)+i)=malloc(sizeof(Challenge));
+        CHECK_AND_FREE( *(((sys)->SysChallenges)+i),((sys)->name),input);
         fscanf(input , "%s %d %d" , buffer , &id_challenge , &level_challenge);
         --level_challenge;
-        checking_problems=init_challenge(*(((*sys)->SysChallenges)+i), id_challenge, buffer, (Level)level_challenge);
-        CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
+        checking_problems=init_challenge(*(((sys)->SysChallenges)+i), id_challenge, buffer, (Level)level_challenge);
+        CHECK_RESULT_AND_2FREE(checking_problems,((sys)->name),*((sys)->SysChallenges),input);
     }
     return OK;
 }
@@ -404,22 +404,18 @@ int id_challenge, int level_challenge, char* buffer){
 /************************************************************************
  *                           *
  ***********************************************************************/
-static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id, Visitor *visitor1){
+static Result find_visitor(ChallengeRoomSystem **sys,int visitor_id, Visitor *visitor1){
     CHECK_NULL (sys);
 
-    if (&(sys->linked_list->visitor) == NULL){
+    if ((*sys)->linked_list->visitor == NULL){
         return NOT_IN_ROOM;
     }
-
-
-    visitor1=(sys->linked_list->visitor);
-
     while(visitor_id != (visitor1->visitor_id)){
 
-        if ((sys->linked_list->next) == NULL){
+        if ((*sys)->linked_list->next == NULL){
             return NOT_IN_ROOM;
         }
-        visitor1 = (sys->linked_list->next->visitor);
+        visitor1 = ((*sys)->linked_list->next->visitor);
     }
 
     return OK;
