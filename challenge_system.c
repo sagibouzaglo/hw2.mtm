@@ -5,7 +5,6 @@
 
 
 #include "challenge_system.h"
-#include "challenge_room_system_fields.h"
 
 #define ROW_LENGTH 51
 #define NOT_FOUND -1
@@ -44,17 +43,15 @@
                             return Result;\
                             }
 
-static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input,
+static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input);/*,
                                int num_of_room, char* buffer , int challenges_in_room,
-                               int IDs_challenge ,int num_of_challenge);
+                               int IDs_challenge ,int num_of_challenge);*/
 
-static Result create_all_challenges(ChallengeRoomSystem *sys ,FILE* input,
-                                    int num_of_challenge,
-                                    int id_challenge, int level_challenge,
-                                    char* buffer);
+static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input);/*, int num_of_challenge,
+int id_challenge, int level_challenge, char* buffer)*/
 
 
-static Result find_visitor(ChallengeRoomSystem **sys,int visitor_id ,Visitor *visitor);
+static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id ,Node *visitor);
 
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
@@ -64,8 +61,8 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys);
  ***********************************************************************/
 Result create_system(char *init_file, ChallengeRoomSystem **sys){
     *sys=malloc(sizeof(ChallengeRoomSystem));
+    CHECK_MEMORY(*sys);
     ((*sys)->Systime)=0;
-
 
     char buffer[ROW_LENGTH];
     
@@ -73,29 +70,28 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     input =fopen(init_file, "r");
     CHECK_NULL(input);
     fscanf(input, "%s" ,buffer);
-    CHECK (*buffer,input);
+    //CHECK (*buffer,input);
 
     (*sys)->name = malloc(sizeof(char) * strlen(buffer)+1);
     CHECK ((*sys)->name ,input);
 
     strcpy((*sys)->name, buffer);
 
-
-
+/*
     int num_of_challenge = 0;
     int id_challenge=0;
-    int level_challenge = 0;
-    Result checking_problems=create_all_challenges(*sys , input,  num_of_challenge, id_challenge,  level_challenge,  buffer);
+    int level_challenge = 0;*/
+    Result checking_problems=create_all_challenges(*sys , input);//,  num_of_challenge, id_challenge,  level_challenge,  buffer);
     CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
 
-    int num_of_room=0;
+   /*int num_of_room=0;
     int challenges_in_room=0;
-    int IDs_challenge=0;
+    int IDs_challenge=0;*/
 
-    checking_problems=create_all_rooms(*sys, input,num_of_room, buffer ,
-                            challenges_in_room, IDs_challenge ,num_of_challenge);
+    checking_problems=create_all_rooms(*sys, input);/*num_of_room, buffer ,
+                            challenges_in_room, IDs_challenge ,num_of_challenge);*/
     CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
-
+    (*sys)->linked_list = NULL;
     fclose(input);
     return OK;
 }
@@ -148,39 +144,42 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
  *                    *
  ***********************************************************************/
 Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_name, int visitor_id, Level level, int start_time){
+    printf("visitor_arrive 1\n");
     CHECK_NULL(sys);
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
-
-    Visitor* visitor = malloc(sizeof(Visitor*));
-    CHECK_MEMORY(visitor);
-
-
-
-    Result checking_problems = find_visitor(&sys,visitor_id,visitor);
-    if (checking_problems != ILLEGAL_PARAMETER) return ALREADY_IN_ROOM;
-
-    ChallengeRoom *room=malloc(sizeof(ChallengeRoom));
-    CHECK_MEMORY(room);
+    printf("visitor_arrive 2\n");
+    Node visitor = NULL;
+    printf("visitor_arrive 3\n");
+    find_visitor(sys,visitor_id,&visitor);
+    if (visitor != NULL) return ALREADY_IN_ROOM;
+    printf("visitor_arrive 4\n");
+    ChallengeRoom* room = NULL;
     for (int i =0; i<sys->Sys_num_of_rooms ; ++i ){
-        if( (*((sys->SysRooms)+i))->name == room_name){
+        if(!strcmp((*((sys->SysRooms)+i))->name, room_name)){
             room = *((sys->SysRooms)+i);
             break;
         }
     }
-    checking_problems=visitor_enter_room(room,visitor,level,start_time);
+    if(room == NULL)
+        return ILLEGAL_PARAMETER;
+    visitor = malloc(sizeof(Visitor));
+    CHECK_MEMORY(visitor);
+    init_visitor(visitor,visitor_name,visitor_id);
+    printf("visitor_arrive 5\n");
+    Result checking_problems=visitor_enter_room(room,visitor,level,start_time);
     if (checking_problems != OK){
+        free(visitor);
         return checking_problems;
     }
-    Node tmp_node=malloc(sizeof(Node));
+    printf("visitor_arrive 6\n");
+    Node tmp_node=malloc(sizeof(*tmp_node));
     CHECK_MEMORY(tmp_node);
     (tmp_node->next) = sys->linked_list;
     sys->linked_list=tmp_node;
-
+    printf("visitor_arrive 7\n");
     sys->linked_list->visitor=visitor;
-    free(room);
-    free(visitor);
     return  OK;
 
 }
@@ -190,21 +189,29 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
  * alse the system realese memory and change the linked list            *
  ***********************************************************************/
 Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
-    if (((quit_time<0)||(quit_time<=(sys->Systime))) && (sys != NULL)){
+    if ((sys != NULL) && ((quit_time<0)||(quit_time<(sys->Systime))) ){
         return ILLEGAL_TIME;
     }
     CHECK_NULL(sys);
-    Node tmp_node=malloc(sizeof(Node));
-    CHECK_MEMORY(tmp_node);
-    while((sys->linked_list->visitor->visitor_id)!= visitor_id){
+    Node tmp_node = sys->linked_list;
+    Node previous = sys->linked_list;
+    while(tmp_node != NULL) {
+        if()
+    }
+    /*while((sys->linked_list->visitor->visitor_id)!= visitor_id){
         tmp_node->next =sys->linked_list->next;
-        if (linked_list->next == NULL){
+        if (sys->linked_list->next == NULL){
             return ILLEGAL_PARAMETER;
         }
     }
     visitor_quit_room(sys->linked_list->visitor, quit_time);
     sys->Systime=quit_time;
     return OK;
+    */
+    previous->next = tmp_node->next;
+    reset_visitor(tmp_node->visitor);
+    free(tmp_node->visitor);
+    free(tmp_node);
 } // not finished
 
 /************************************************************************
@@ -242,7 +249,7 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char
     sys->linked_list=tmp_node;
     while(strcmp((sys->linked_list->visitor->visitor_name),visitor_name)!= 0){
         tmp_node->next=sys->linked_list->next;
-        if (linked_list->next == NULL){
+        if (sys->linked_list->next == NULL){
             return ILLEGAL_PARAMETER;
         }
     }
@@ -350,29 +357,31 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys){
 /************************************************************************
  *                           *
  ***********************************************************************/
-static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input,
+static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input)/*,
                                int num_of_room, char* buffer , int challenges_in_room,
-                               int IDs_challenge ,int num_of_challenge){
+                               int IDs_challenge ,int num_of_challenge)*/{
+    int num_of_room=0;
+    int challenges_in_room=0;
+    int IDs_challenge=0;
+
+    char buffer[ROW_LENGTH];
     fscanf(input, "%d" ,&num_of_room);
     (sys->Sys_num_of_rooms) = num_of_room;
-    sys->SysRooms=malloc(sizeof(ChallengeRoom*)*num_of_room);
+    sys->SysRooms=malloc(sizeof(ChallengeRoom*) * num_of_room);
     CHECK_AND_2FREE(((sys)->SysRooms),((sys)->name),(sys->SysChallenges),input);
-
     for(int i=0 ; i <num_of_room ; i++ ){
-
-        *(((sys)->SysRooms)+i) = malloc(sizeof(ChallengeRoom));
+        *(sys->SysRooms + i) = malloc(sizeof(ChallengeRoom));
         CHECK_AND_2FREE(*(((sys)->SysRooms)+i),((sys)->name),(*(sys)->SysChallenges),input);
         fscanf(input , "%s %d" , buffer , &challenges_in_room );
         Result checking_problems=init_room(*(((sys)->SysRooms)+i),buffer,challenges_in_room);
         CHECK_RESULT_AND_3FREE(checking_problems,((sys)->name),(*(sys)->SysChallenges),(*(sys)->SysRooms),input);
-
         for(int j=0; j<challenges_in_room ;++j){
             fscanf(input , "%d" , &IDs_challenge);
-            for(int k=0 ; k<num_of_challenge ; ++k ){
-
-                if((*((sys)->SysChallenges)+k)->id == challenges_in_room){
-                    checking_problems=init_challenge_activity(((*((sys)->SysRooms)+i)->challenges),(*((sys)->SysChallenges)+k));/*???? <-- ??*/
+            for(int k=0 ; k<sys->Sysnum_of_challenges ; ++k ){
+                if((*((sys)->SysChallenges+k))->id == IDs_challenge){
+                    checking_problems=init_challenge_activity(((*((sys)->SysRooms+i))->challenges +j),(*((sys)->SysChallenges+k)));
                     CHECK_RESULT_AND_3FREE(checking_problems,((sys)->name),(*(sys)->SysChallenges),(*(sys)->SysRooms),input);
+
                 }
             }
         }
@@ -383,11 +392,17 @@ static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input,
 /************************************************************************
  *                           *
  ***********************************************************************/
-static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input, int num_of_challenge,
-int id_challenge, int level_challenge, char* buffer){
+static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input)/*, int num_of_challenge,
+int id_challenge, int level_challenge, char* buffer)*/{
+    char buffer[ROW_LENGTH];
+    int num_of_challenge = 0;
+    int id_challenge=0;
+    int level_challenge = 0;
+
     fscanf(input, "%d" ,&num_of_challenge);
+
     ((sys)->SysChallenges)=malloc(sizeof(Challenge*)*num_of_challenge);
-    CHECK_AND_FREE(*((sys)->SysChallenges),((sys)->name),input);
+    CHECK_AND_FREE(((sys)->SysChallenges),((sys)->name),input);
     ((sys)->Sysnum_of_challenges) = num_of_challenge;
     Result checking_problems;
     for(int i=0 ; i<num_of_challenge ; ++i ){
@@ -404,19 +419,20 @@ int id_challenge, int level_challenge, char* buffer){
 /************************************************************************
  *                           *
  ***********************************************************************/
-static Result find_visitor(ChallengeRoomSystem **sys,int visitor_id, Visitor *visitor1){
+static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id, Node *visitor){
     CHECK_NULL (sys);
 
-    if ((*sys)->linked_list->visitor == NULL){
+    /*if (sys->linked_list == NULL){
         return NOT_IN_ROOM;
-    }
-    while(visitor_id != (visitor1->visitor_id)){
-
-        if ((*sys)->linked_list->next == NULL){
-            return NOT_IN_ROOM;
+    }*/
+    Node ptr = sys->linked_list;
+    while(ptr != NULL) {//visitor_id != sys->linked_list->visitor->visitor_id){
+        if (ptr->visitor->visitor_id == visitor_id){
+            *visitor = ptr;
+            return OK;
         }
-        visitor1 = ((*sys)->linked_list->next->visitor);
+        ptr = ptr->next;
     }
 
-    return OK;
+    return NOT_IN_ROOM;
 }

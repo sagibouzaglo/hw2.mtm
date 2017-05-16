@@ -157,33 +157,39 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
     CHECK_NULL(visitor);
     CHECK_NULL(room);
     int places=0;
+    printf("visitor_enter_room 1\n");
     num_of_free_places_for_level(room,level,&places);
+    printf("visitor_enter_room 2\n");
     if(places < 1) return NO_AVAILABLE_CHALLENGES;
-    if(visitor->room_name != NULL )
+    if(*visitor->room_name != NULL )
         return ALREADY_IN_ROOM;
-    Challenge *ChallengeToVisitor = (room->challenges)->challenge; 
-    int j=0;
+    printf("visitor_enter_room 3\n");
+    ChallengeActivity *ChallengeToVisitor = NULL;
+
     for(int i=0; i< (room->num_of_challenges) ; ++i){
+        if((room->challenges+i)->visitor != NULL) {
+            continue;
+        }
         if(level!=All_Levels) {
             if((room -> challenges +i )->challenge->level==level){
-                if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
-                    *ChallengeToVisitor=*(room->challenges+i)->challenge;
-                    j=i;
+                if(ChallengeToVisitor == NULL || strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->challenge->name)<0) {
+                    ChallengeToVisitor = (room->challenges + i);
                 }
             }
         }
         else{
-            if(strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->name)<0){
-                *ChallengeToVisitor=*(room->challenges+i)->challenge;
-                j=i;
+            if(ChallengeToVisitor == NULL || strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->challenge->name)<0) {
+                ChallengeToVisitor = (room->challenges + i);
             }
         }
     }
-    (room->challenges+j)->visitor=visitor;
-    (room->challenges+j)->start_time=start_time;
+    if(ChallengeToVisitor == NULL)
+        return NO_AVAILABLE_CHALLENGES;
+    ChallengeToVisitor->visitor=visitor;
+    ChallengeToVisitor->start_time=start_time;
     *(visitor->room_name)=room->name;
-    visitor->current_challenge=(room->challenges+j);
-    (room->challenges+j)->challenge->num_visits+=1;
+    visitor->current_challenge=ChallengeToVisitor;
+    ChallengeToVisitor->challenge->num_visits++;
     
     return OK;
 }

@@ -16,16 +16,18 @@ int main(int argc, char **argv)
 
    ChallengeRoomSystem *sys=NULL;
    Result r=OK;
-
+   printf("Got here 1\n");
    r=create_system("test_1.txt", &sys);
 
+   printf("Got here 2\n");
    r=visitor_arrive(sys, "room_2", "visitor_1", 201, Medium, 5);
-
+   printf("Got here 3\n");
    r=visitor_arrive(sys, "room_1", "visitor_2", 202, Easy, 8);
+   printf("Got here 4\n");
 
    r=visitor_quit(sys, 203, 10);
    ASSERT("1.1" , r==NOT_IN_ROOM)
-
+   printf("Got here 5\n");
    r=visitor_quit(sys, 201, 9);
    ASSERT("1.2" , r==OK)
 
