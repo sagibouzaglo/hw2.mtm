@@ -199,8 +199,11 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
     Node tmp_node = sys->linked_list;
     Node previous = sys->linked_list;
     printf("visitor_quit 2 \n");
+    if (tmp_node == NULL){
+        free(tmp_node);
+        return NOT_IN_ROOM;
+    }
     while(tmp_node != NULL) {
-
         if(tmp_node->visitor->visitor_id != visitor_id){
             previous = tmp_node;
             tmp_node = previous->next;
