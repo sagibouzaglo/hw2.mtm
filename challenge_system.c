@@ -166,20 +166,21 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
         return ILLEGAL_PARAMETER;
     visitor = malloc(sizeof(Visitor));
     CHECK_MEMORY(visitor);
-    init_visitor(visitor,visitor_name,visitor_id);
+    init_visitor(visitor->visitor,visitor_name,visitor_id);
     printf("visitor_arrive 5\n");
-    Result checking_problems=visitor_enter_room(room,visitor,level,start_time);
+    Result checking_problems=visitor_enter_room(room,visitor->visitor,level,start_time);
     if (checking_problems != OK){
         free(visitor);
         return checking_problems;
     }
     printf("visitor_arrive 6\n");
-    Node tmp_node=malloc(sizeof(*tmp_node));
+    Node tmp_node = malloc(sizeof(Node*));
     CHECK_MEMORY(tmp_node);
+    printf("visitor_arrive 7/1\n");
     (tmp_node->next) = sys->linked_list;
     sys->linked_list=tmp_node;
     printf("visitor_arrive 7\n");
-    sys->linked_list->visitor=visitor;
+    sys->linked_list=visitor;
     return  OK;
 
 }
@@ -193,10 +194,21 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
         return ILLEGAL_TIME;
     }
     CHECK_NULL(sys);
+    printf("visitor_quit 1 \n");
     Node tmp_node = sys->linked_list;
     Node previous = sys->linked_list;
+    printf("visitor_quit 1 \n");
     while(tmp_node != NULL) {
-        if()
+        
+        if(tmp_node->visitor->visitor_id != visitor_id){
+            previous = sys->linked_list;
+            tmp_node = sys->linked_list->next;
+        } else{
+            previous->next = tmp_node->next;
+            Result checking_problems = reset_visitor(tmp_node->visitor);
+            if(checking_problems != OK)return checking_problems;
+            break;
+        }
     }
     /*while((sys->linked_list->visitor->visitor_id)!= visitor_id){
         tmp_node->next =sys->linked_list->next;
@@ -208,10 +220,10 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
     sys->Systime=quit_time;
     return OK;
     */
-    previous->next = tmp_node->next;
-    reset_visitor(tmp_node->visitor);
+
     free(tmp_node->visitor);
     free(tmp_node);
+    return OK;
 } // not finished
 
 /************************************************************************
