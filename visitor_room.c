@@ -183,12 +183,15 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
             }
         }
     }
+    printf("visitor_enter_room 4\n");
     if(ChallengeToVisitor == NULL)
         return NO_AVAILABLE_CHALLENGES;
+    printf("visitor_enter_room 5\n");
     ChallengeToVisitor->visitor=visitor;
     ChallengeToVisitor->start_time=start_time;
     *(visitor->room_name)=room->name;
     visitor->current_challenge=ChallengeToVisitor;
+    visitor->current_challenge->start_time=start_time;
     ChallengeToVisitor->challenge->num_visits++;
     
     return OK;
@@ -201,7 +204,7 @@ Result visitor_quit_room(Visitor *visitor, int quit_time){
     CHECK_NULL(visitor);
     int total_time=0;
     if(visitor->room_name == NULL ) return NOT_IN_ROOM;
-    total_time=quit_time-(visitor->current_challenge->start_time);
+    total_time=(quit_time -(visitor->current_challenge->start_time));
     set_best_time_of_challenge(visitor->current_challenge->challenge,total_time);
     visitor->current_challenge->visitor=NULL;
     visitor->current_challenge->start_time=0;
