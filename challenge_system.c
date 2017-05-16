@@ -174,7 +174,8 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
         return checking_problems;
     }
     printf("visitor_arrive 6\n");
-    Node tmp_node = malloc(sizeof(Node*));
+    Node tmp_node = malloc(sizeof(Node));
+    printf("visitor_arrive 6.1\n");
     CHECK_MEMORY(tmp_node);
     printf("visitor_arrive 7/1\n");
     (tmp_node->next) = sys->linked_list;
@@ -197,14 +198,17 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
     printf("visitor_quit 1 \n");
     Node tmp_node = sys->linked_list;
     Node previous = sys->linked_list;
-    printf("visitor_quit 1 \n");
+    printf("visitor_quit 2 \n");
     while(tmp_node != NULL) {
-        
+
         if(tmp_node->visitor->visitor_id != visitor_id){
-            previous = sys->linked_list;
-            tmp_node = sys->linked_list->next;
+            previous = tmp_node;
+            tmp_node = previous->next;
+            printf("visitor_quit 3 \n");
         } else{
+            printf("visitor_quit 4 \n");
             previous->next = tmp_node->next;
+            printf("visitor_quit 5 \n");
             Result checking_problems = reset_visitor(tmp_node->visitor);
             if(checking_problems != OK)return checking_problems;
             break;
@@ -221,7 +225,7 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
     return OK;
     */
 
-    free(tmp_node->visitor);
+
     free(tmp_node);
     return OK;
 } // not finished
