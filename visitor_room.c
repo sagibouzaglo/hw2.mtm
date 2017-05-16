@@ -16,7 +16,8 @@
 /************************************************************************
  * inisialise challenge activity to 0                                   *
  ***********************************************************************/
-Result init_challenge_activity(ChallengeActivity *activity, Challenge *challenge){
+Result init_challenge_activity(ChallengeActivity *activity,
+                                                Challenge *challenge){
     CHECK_NULL(challenge);
     CHECK_NULL(activity);
     activity->challenge = challenge;
@@ -106,7 +107,8 @@ Result reset_room(ChallengeRoom *room){
 /************************************************************************
  * return the number of free challenges in room of the given level      *
  ***********************************************************************/
-Result num_of_free_places_for_level(ChallengeRoom *room, Level level, int *places){
+Result num_of_free_places_for_level(ChallengeRoom *room, Level level,
+                                                            int *places){
    CHECK_NULL(room);
     int counter = 0;
     for(int i=0; i < (room->num_of_challenges) ; ++i){
@@ -154,7 +156,8 @@ Result room_of_visitor(Visitor *visitor, char **room_name){
  * enter visitor to a challenge (with the smaller lexicographic name)   *
  * of a chosen level. if possible                                       *
  ***********************************************************************/
-Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, int start_time){
+Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
+                                                                int start_time){
     CHECK_NULL(visitor);
     CHECK_NULL(room);
     int places=0;
@@ -173,13 +176,17 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level, in
         }
         if(level!=All_Levels) {
             if((room -> challenges +i )->challenge->level==level){
-                if(ChallengeToVisitor == NULL || strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->challenge->name)<0) {
+                if(ChallengeToVisitor == NULL ||
+                                strcmp((room->challenges+i)->challenge->name,
+                                       ChallengeToVisitor->challenge->name)<0){
                     ChallengeToVisitor = (room->challenges + i);
                 }
             }
         }
         else{
-            if(ChallengeToVisitor == NULL || strcmp((room->challenges+i)->challenge->name,ChallengeToVisitor->challenge->name)<0) {
+            if(ChallengeToVisitor == NULL ||
+                                strcmp((room->challenges+i)->challenge->name,
+                                       ChallengeToVisitor->challenge->name)<0){
                 ChallengeToVisitor = (room->challenges + i);
             }
         }
