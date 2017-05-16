@@ -7,7 +7,7 @@
 #include "challenge_system.h"
 
 #define ROW_LENGTH 51
-#define NOT_FOUND -1
+#define NOT_FOUND 0
 #define CHECK_NULL(ptr) if(ptr==NULL){\
                             return NULL_PARAMETER;\
                             }
@@ -115,15 +115,15 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
         best_time_of_system_challenge(sys,((*(sys->SysChallenges ))->name),
                                       &best_time);
         int challenge_time = best_time;
-        printf("aaaaaaa %d",challenge_time);
+        printf("aaaaaaa %d\n",challenge_time);
         int j = NOT_FOUND;
         printf("destroy_system 4 \n");
         for (int i = 1; i < (sys->Sysnum_of_challenges); ++i) {
             best_time_of_system_challenge(sys,
                                           ((*(sys->SysChallenges + i))->name),
                                           &challenge_time);
-            printf("%s/n" , ((*(sys->SysChallenges + i))->name));
-            if(challenge_time < best_time){
+            printf("%s\n" , ((*(sys->SysChallenges + i))->name));
+            if((challenge_time < best_time) && (challenge_time != 0)){ // added != 0
                 printf("destroy_system 5 %s %d \n", *challenge_best_time, i);
                 best_time = challenge_time;
                 j=i;
@@ -137,12 +137,13 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
 
                         j=i;
                     }
+     //       }else{
+       //         j=i; // not sure if correct...
             }
             printf("destroy_system 11 %s %d \n", *challenge_best_time, i);
-            printf("destroy_system 7 %s %d \n",((*(sys->SysChallenges + j))->name),j);
-            *challenge_best_time = malloc(
-                    sizeof(char) *
-                    strlen(((*(sys->SysChallenges + j))->name) + 1));
+//            printf("destroy_system 7 %s %d \n",((*(sys->SysChallenges + j))->name),j);
+            *challenge_best_time = malloc(sizeof(char) *
+                                strlen(((*((sys->SysChallenges)+j))->name)+1));
             if (*challenge_best_time == NULL) return MEMORY_PROBLEM;
             printf("destroy_system 8 \n");
             strcpy(*challenge_best_time,((*(sys->SysChallenges + j))->name));
