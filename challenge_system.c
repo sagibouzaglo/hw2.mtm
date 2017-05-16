@@ -51,7 +51,8 @@ static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input);/*, in
 int id_challenge, int level_challenge, char* buffer)*/
 
 
-static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id ,Node *visitor);
+static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id,
+                                                            Node *visitor);
 
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
@@ -82,7 +83,8 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
     int id_challenge=0;
     int level_challenge = 0;*/
     Result checking_problems=create_all_challenges(*sys , input);//,  num_of_challenge, id_challenge,  level_challenge,  buffer);
-    CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),input);
+    CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),
+                                    ((*sys)->SysChallenges),input);
 
    /*int num_of_room=0;
     int challenges_in_room=0;
@@ -90,14 +92,16 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
 
     checking_problems=create_all_rooms(*sys, input);/*num_of_room, buffer ,
                             challenges_in_room, IDs_challenge ,num_of_challenge);*/
-    CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),((*sys)->SysChallenges),((*sys)->SysRooms),input);
+    CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),
+                            ((*sys)->SysChallenges),((*sys)->SysRooms),input);
     (*sys)->linked_list = NULL;
     fclose(input);
     return OK;
 }
 
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
-                      char **most_popular_challenge_p, char **challenge_best_time) {
+                                    char **most_popular_challenge_p,
+                                        char **challenge_best_time) {
     if (destroy_time < ((sys)->Systime))return ILLEGAL_TIME;
     printf("destroy_system 1 \n");
     all_visitors_quit(sys, destroy_time);
@@ -135,7 +139,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                     }
             }
             printf("destroy_system 11 %s %d \n", *challenge_best_time, i);
-            printf("destroy_system 7 %s %d \n" ,((*(sys->SysChallenges + j))->name),j );
+            printf("destroy_system 7 %s %d \n",((*(sys->SysChallenges + j))->name),j);
             *challenge_best_time = malloc(
                     sizeof(char) *
                     strlen(((*(sys->SysChallenges + j))->name) + 1));
@@ -156,7 +160,9 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
 /************************************************************************
  *                    *
  ***********************************************************************/
-Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_name, int visitor_id, Level level, int start_time){
+Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
+                                char *visitor_name, int visitor_id,
+                                        Level level, int start_time){
     CHECK_NULL(sys);
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
@@ -232,7 +238,8 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
             }*/
             printf("visitor_quit 5 \n");
 
-            Result checking_problems = visitor_quit_room(tmp_node1->visitor, quit_time);
+            Result checking_problems = visitor_quit_room(tmp_node1->visitor,
+                                                                    quit_time);
             if(checking_problems != OK)return checking_problems;
 
             checking_problems = reset_visitor(tmp_node1->visitor);
@@ -288,7 +295,8 @@ Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time){
 /************************************************************************
  * using "room_of_visitor" to find the room the visitr is staying in    *
  ***********************************************************************/
-Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char **room_name) {
+Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name,
+                                                            char **room_name) {
     CHECK_NULL(sys);
     if ((visitor_name == NULL) || (room_name == NULL)) {
         return ILLEGAL_PARAMETER;
@@ -303,10 +311,9 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char
         if (strcmp(tmp_node1->visitor->visitor_name, visitor_name)!=0) {
             previous = tmp_node1;
             tmp_node1 = previous->next;
-
         } else {
-
-            *room_name = malloc(sizeof(char)*strlen(*tmp_node1->visitor->room_name)+1);
+            *room_name = malloc(sizeof(char)*
+                                    strlen(*tmp_node1->visitor->room_name)+1);
             CHECK_NULL(*room_name);
             strcpy(*room_name,*tmp_node1->visitor->room_name);
 
@@ -333,11 +340,13 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char
 /************************************************************************
  * finding the relevant challenge and change it's name                  *
  ***********************************************************************/
-Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *new_name){
+Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id,
+                                                                char *new_name){
     CHECK_NULL(sys);
     CHECK_NULL(new_name);
     int i=0;
-    while ((i<(sys->Sysnum_of_challenges))&&(challenge_id != ((*((sys->SysChallenges)+i))->id))){
+    while ((i<(sys->Sysnum_of_challenges)) &&
+                        (challenge_id != ((*((sys->SysChallenges)+i))->id))){
         i++;
     }
         if (i>=sys->Sysnum_of_challenges){
@@ -349,11 +358,13 @@ Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id, char *n
 /************************************************************************
  * finding the relevant room and change it's name                       *
  ***********************************************************************/
-Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, char *new_name){
+Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name,
+                                                                char *new_name){
     CHECK_NULL(sys);
     CHECK_NULL(new_name);
     int i=0;
-    while ((i<(sys->Sys_num_of_rooms)&&(strcmp(current_name,((*((sys->SysRooms)+i))->name))!=0))){
+    while ((i<(sys->Sys_num_of_rooms) &&
+                    (strcmp(current_name,((*((sys->SysRooms)+i))->name))!=0))){
         i++;
     }
     if (i>=(sys->Sys_num_of_rooms)){
@@ -365,7 +376,8 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name, cha
 /************************************************************************
  *                    *
  ***********************************************************************/
-Result best_time_of_system_challenge(ChallengeRoomSystem *sys, char *challenge_name, int *time){
+Result best_time_of_system_challenge(ChallengeRoomSystem *sys,
+                                            char *challenge_name, int *time){
     CHECK_NULL(sys);
     CHECK_NULL(challenge_name);
     int j = NOT_FOUND;
@@ -395,7 +407,8 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
             j=i;
         }
         else if(visits == max_num_of_visitor_in_challenge){
-            if(strcmp(((*(sys->SysChallenges+j))->name),((*(sys->SysChallenges+i))->name)) > 0 ) {
+            if(strcmp(((*(sys->SysChallenges+j))->name),
+                                    ((*(sys->SysChallenges+i))->name)) > 0 ) {
                 max_num_of_visitor_in_challenge = visits;
                 j=i;
             }
@@ -442,16 +455,24 @@ static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input)/*,
     CHECK_AND_2FREE(((sys)->SysRooms),((sys)->name),(sys->SysChallenges),input);
     for(int i=0 ; i <num_of_room ; i++ ){
         *(sys->SysRooms + i) = malloc(sizeof(ChallengeRoom));
-        CHECK_AND_2FREE(*(((sys)->SysRooms)+i),((sys)->name),(*(sys)->SysChallenges),input);
+        CHECK_AND_2FREE(*(((sys)->SysRooms)+i),((sys)->name),
+                                                (*(sys)->SysChallenges),input);
         fscanf(input , "%s %d" , buffer , &challenges_in_room );
-        Result checking_problems=init_room(*(((sys)->SysRooms)+i),buffer,challenges_in_room);
-        CHECK_RESULT_AND_3FREE(checking_problems,((sys)->name),(*(sys)->SysChallenges),(*(sys)->SysRooms),input);
+        Result checking_problems=init_room(*(((sys)->SysRooms)+i),
+                                                    buffer,challenges_in_room);
+        CHECK_RESULT_AND_3FREE(checking_problems,((sys)->name),
+                                            (*(sys)->SysChallenges),
+                                                (*(sys)->SysRooms),input);
         for(int j=0; j<challenges_in_room ;++j){
             fscanf(input , "%d" , &IDs_challenge);
             for(int k=0 ; k<sys->Sysnum_of_challenges ; ++k ){
                 if((*((sys)->SysChallenges+k))->id == IDs_challenge){
-                    checking_problems=init_challenge_activity(((*((sys)->SysRooms+i))->challenges +j),(*((sys)->SysChallenges+k)));
-                    CHECK_RESULT_AND_3FREE(checking_problems,((sys)->name),(*(sys)->SysChallenges),(*(sys)->SysRooms),input);
+                    checking_problems=init_challenge_activity(
+                                        ((*((sys)->SysRooms+i))->challenges +j),
+                                                   (*((sys)->SysChallenges+k)));
+                    CHECK_RESULT_AND_3FREE(checking_problems,((sys)->name),
+                                           (*(sys)->SysChallenges),
+                                            (*(sys)->SysRooms),input);
 
                 }
             }
@@ -481,8 +502,11 @@ int id_challenge, int level_challenge, char* buffer)*/{
         CHECK_AND_FREE( *(((sys)->SysChallenges)+i),((sys)->name),input);
         fscanf(input , "%s %d %d" , buffer , &id_challenge , &level_challenge);
         --level_challenge;
-        checking_problems=init_challenge(*(((sys)->SysChallenges)+i), id_challenge, buffer, (Level)level_challenge);
-        CHECK_RESULT_AND_2FREE(checking_problems,((sys)->name),*((sys)->SysChallenges),input);
+        checking_problems=init_challenge(*(((sys)->SysChallenges)+i),
+                                            id_challenge, buffer,
+                                                (Level)level_challenge);
+        CHECK_RESULT_AND_2FREE(checking_problems,((sys)->name),
+                                            *((sys)->SysChallenges),input);
     }
     return OK;
 }
