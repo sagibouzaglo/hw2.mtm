@@ -159,15 +159,20 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name, char *visitor_n
     find_visitor(sys,visitor_id,&visitor1);
     if (visitor1 != NULL) return ALREADY_IN_ROOM;
     printf("visitor_arrive 4\n");
-    ChallengeRoom* room = NULL;
-    for (int i =0; i<sys->Sys_num_of_rooms ; ++i ){
-        if(!strcmp((*((sys->SysRooms)+i))->name, room_name)){
-            room = *((sys->SysRooms)+i);
+    ChallengeRoom *room = NULL;
+    int j=0;
+    for (int i=0;i<(sys->Sys_num_of_rooms);++i){
+        if(strcmp(((*((sys->SysRooms) + i))->name),room_name)== 0){
+            room =(*((sys->SysRooms) + i));
+            i=j;
             break;
         }
     }
-    if(room == NULL)
+    printf("visitor_arrive 4.232 %s %s \n" , room_name ,((*((sys->SysRooms) + j))->name) );
+    if(room == NULL){
         return ILLEGAL_PARAMETER;
+    }
+
     printf("visitor_arrive 4.2\n");
     visitor1 = malloc(sizeof(Node));
     printf("visitor_arrive 4.1\n");
@@ -282,18 +287,36 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name, char
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
-    Node tmp_node=malloc(sizeof(Node));
+    Node tmp_node1 = sys->linked_list;
+    Node previous = NULL;
+    if (tmp_node1 == NULL){
+        free(tmp_node1);
+        return NOT_IN_ROOM;
+    }
+    while(tmp_node1!= NULL) {
+        if(!strcmp(tmp_node1->visitor->visitor_name,visitor_name)){
+            previous = tmp_node1;
+            tmp_node1 = previous->next;
+            printf("visitor_quit 3 \n");
+        } else{
+            printf("visitor_quit 4 \n");
+            previous->next = tmp_node1->next;
+            printf("visitor_quit 5 \n");
+
+    /*Node tmp_node=malloc(sizeof(Node));
     CHECK_MEMORY(tmp_node);
+    printf("room of vis SYS 1\n");
     tmp_node->next = sys->linked_list;
     sys->linked_list=tmp_node;
+    printf("room of vis SYS 2\n");
     while(strcmp((sys->linked_list->visitor->visitor_name),visitor_name)!= 0){
         tmp_node->next=sys->linked_list->next;
         if (sys->linked_list->next == NULL){
-            return ILLEGAL_PARAMETER;
+            return NOT_IN_ROOM;
         }
     }
     if (room_of_visitor(tmp_node->visitor,room_name)==NOT_IN_ROOM){
-        return NOT_IN_ROOM;
+        return NOT_IN_ROOM;*/
     }
     return OK;
 }
@@ -375,10 +398,10 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
     }
 
     *challenge_name = malloc(
-            sizeof(char) * strlen((*((sys)->SysChallenges) + j)->name + 1));
+            sizeof(char) * strlen(((*(sys->SysChallenges+j))->name) + 1));
     if (*challenge_name == NULL) return MEMORY_PROBLEM;
 
-    strcpy(*challenge_name,(((*(sys)->SysChallenges)+j)->name));
+    strcpy(*challenge_name,((*(sys->SysChallenges+j))->name));
     return OK;
 }
 /************************************************************************

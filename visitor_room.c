@@ -133,6 +133,7 @@ Result change_room_name(ChallengeRoom *room, char *new_name){
     CHECK_NULL(new_name);
     room->name = malloc(sizeof(char)*(strlen(new_name)+1));
     CHECK_MEMORY(room->name);
+    strcpy( room->name,new_name);
     return OK;
 }
 
@@ -142,7 +143,7 @@ Result change_room_name(ChallengeRoom *room, char *new_name){
 Result room_of_visitor(Visitor *visitor, char **room_name){
     CHECK_NULL(visitor);
     CHECK_NULL(room_name);
-    if(visitor->room_name == NULL) return NOT_IN_ROOM;
+    if((visitor->room_name) == NULL) return NOT_IN_ROOM;
     *room_name=malloc(sizeof(char)*(strlen(*visitor->room_name)+1));
     CHECK_MEMORY(visitor->room_name);
     strcpy(*room_name,*visitor->room_name);
