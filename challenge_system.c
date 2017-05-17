@@ -105,7 +105,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
     if (destroy_time < ((sys)->Systime))return ILLEGAL_TIME;
     printf("destroy_system 1 \n");
     all_visitors_quit(sys, destroy_time);
-    int best_time = 0;
+    int best_time=sys->Systime;
     printf("destroy_system 2 \n");
     most_popular_challenge(sys, most_popular_challenge_p);
     if (*most_popular_challenge_p == NULL) {
@@ -122,7 +122,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
             best_time_of_system_challenge(sys,
                                           ((*(sys->SysChallenges + i))->name),
                                           &challenge_time);
-            printf("%s\n" , ((*(sys->SysChallenges + i))->name));
+            printf("%s %d \n" , ((*(sys->SysChallenges + i))->name),challenge_time);
             if((challenge_time < best_time) && (challenge_time != 0)){ // added != 0
                 printf("destroy_system 5 %s %d \n", *challenge_best_time, i);
                 best_time = challenge_time;
@@ -134,13 +134,14 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                                ((*(sys->SysChallenges + i))->name)) > 0) {
                         best_time = challenge_time;
                         printf("destroy_system 12 %s %d \n", *challenge_best_time, i);
-
                         j=i;
                     }
+                printf("destroy_system 11 %s %d %d %d\n", *challenge_best_time, i, j, best_time);
      //       }else{
-       //         j=i; // not sure if correct...
-            }
-            printf("destroy_system 11 %s %d \n", *challenge_best_time, i);
+       //
+                // j=i; // not sure if correct...
+            }}
+
 //            printf("destroy_system 7 %s %d \n",((*(sys->SysChallenges + j))->name),j);
             *challenge_best_time = malloc(sizeof(char) *
                                 strlen(((*((sys->SysChallenges)+j))->name)+1));
@@ -148,7 +149,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
             printf("destroy_system 8 \n");
             strcpy(*challenge_best_time,((*(sys->SysChallenges + j))->name));
             printf("destroy_system 9 \n");
-        }
+
 
     }
     printf("destroy_system 10 %s  \n", *challenge_best_time);

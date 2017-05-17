@@ -76,8 +76,11 @@ Result set_best_time_of_challenge(Challenge *challenge, int time){
  ***********************************************************************/
 Result best_time_of_challenge(Challenge *challenge, int *time){
     CHECK_NULL(challenge);
-    *time = challenge->best_time;
-    printf("time : %d" ,*time);
+    if(challenge->best_time!=0){
+        *time = challenge->best_time;
+    }
+
+    printf("best_time_of_challenge- time :%d %d %s\n",challenge->best_time ,*time , challenge->name);
     return OK;
 }
 

@@ -212,8 +212,10 @@ Result visitor_quit_room(Visitor *visitor, int quit_time){
     CHECK_NULL(visitor);
     int total_time=0;
     if(visitor->room_name == NULL ) return NOT_IN_ROOM;
-    total_time=(quit_time-(visitor->current_challenge->start_time));
+    total_time=(quit_time - (visitor->current_challenge->start_time));
+    printf("set_best_time_of_challenge time: %d \n" , total_time);
     set_best_time_of_challenge(visitor->current_challenge->challenge,total_time);
+    printf("set_best_time_of_challenge time: %d \n" , visitor->current_challenge->challenge->best_time);
     visitor->current_challenge->visitor=NULL;
     visitor->current_challenge->start_time=0;
     visitor->room_name=NULL;
