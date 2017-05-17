@@ -61,14 +61,18 @@ Result set_best_time_of_challenge(Challenge *challenge, int time){
     if (time < 0){
         return ILLEGAL_PARAMETER;
     }
-    if( challenge->best_time == 0){
+    if((challenge->best_time == 0)&&(time!=0)) {
         challenge->best_time = time;
         return OK;
     }
-    if ((time < challenge->best_time) && (time != 0)){
+    if ((time < challenge->best_time) && (time != 0) ) {
         challenge->best_time = time;
+        return OK;
     }
-    return OK;
+
+        return OK;
+
+
 }
 
 /************************************************************************
@@ -76,11 +80,9 @@ Result set_best_time_of_challenge(Challenge *challenge, int time){
  ***********************************************************************/
 Result best_time_of_challenge(Challenge *challenge, int *time){
     CHECK_NULL(challenge);
-    if(challenge->best_time!=0){
-        *time = challenge->best_time;
-    }
 
-    printf("best_time_of_challenge- time :%d %d %s\n",challenge->best_time ,*time , challenge->name);
+        *time = challenge->best_time;
+
     return OK;
 }
 

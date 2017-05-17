@@ -161,13 +161,10 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
     CHECK_NULL(visitor);
     CHECK_NULL(room);
     int places=0;
-    printf("visitor_enter_room 1\n");
     num_of_free_places_for_level(room,level,&places);
-    printf("visitor_enter_room 2\n");
     if(places < 1) return NO_AVAILABLE_CHALLENGES;
     if(*visitor->room_name != NULL )
         return ALREADY_IN_ROOM;
-    printf("visitor_enter_room 3\n");
     ChallengeActivity *ChallengeToVisitor = NULL;
 
     for(int i=0; i< (room->num_of_challenges) ; ++i){
@@ -191,10 +188,8 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
             }
         }
     }
-    printf("visitor_enter_room 4\n");
     if(ChallengeToVisitor == NULL)
         return NO_AVAILABLE_CHALLENGES;
-    printf("visitor_enter_room 5\n");
     ChallengeToVisitor->visitor=visitor;
     ChallengeToVisitor->start_time=start_time;
     *(visitor->room_name)=room->name;
@@ -213,9 +208,7 @@ Result visitor_quit_room(Visitor *visitor, int quit_time){
     int total_time=0;
     if(visitor->room_name == NULL ) return NOT_IN_ROOM;
     total_time=(quit_time - (visitor->current_challenge->start_time));
-    printf("set_best_time_of_challenge time: %d \n" , total_time);
     set_best_time_of_challenge(visitor->current_challenge->challenge,total_time);
-    printf("set_best_time_of_challenge time: %d \n" , visitor->current_challenge->challenge->best_time);
     visitor->current_challenge->visitor=NULL;
     visitor->current_challenge->start_time=0;
     visitor->room_name=NULL;
