@@ -162,6 +162,7 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
     sys->Systime=start_time;
     Node visitor1 = NULL;
     find_visitor(sys,visitor_id,&visitor1);
+    printf("next find_visitor\n");
     if (visitor1 != NULL) return ALREADY_IN_ROOM;
     ChallengeRoom *room = NULL;
     int j=0;
@@ -305,8 +306,7 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name,
 }
     /*Node tmp_node=malloc(sizeof(Node));
     CHECK_MEMORY(tmp_node);
-
-     ("room of vis SYS 1\n");
+    printf("room of vis SYS 1\n");
     tmp_node->next = sys->linked_list;
     sys->linked_list=tmp_node;
     printf("room of vis SYS 2\n");
@@ -507,9 +507,13 @@ static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id, Node *visito
         return NOT_IN_ROOM;
     }*/
     Node ptr = sys->linked_list;
+
+
+    printf("find_visitor\n");
     while(ptr != NULL) {//visitor_id != sys->linked_list->visitor->visitor_id){
         if (ptr->visitor->visitor_id == visitor_id){
-            *visitor = ptr;
+            *visitor = malloc(sizeof(Node));
+            *visitor=ptr;
             return OK;
         }
         ptr = ptr->next;
