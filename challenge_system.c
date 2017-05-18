@@ -191,7 +191,7 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
     }
     printf("visitor_arrive5\n");
     Node node2 = malloc(sizeof(*node2));
-    node2->visitor=visitor;
+    node2->visitor=visitor; 
     printf("visitor_arrive6\n");
     if(sys->linked_list==NULL){
         sys->linked_list=node2;
