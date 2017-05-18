@@ -77,8 +77,8 @@ Result init_room(ChallengeRoom *room, char *name, int num_challenges){
     CHECK_NULL(room);
     CHECK_NULL(name);
     room->name = malloc(sizeof(char)*(strlen(name)+1));
-    room->challenges = malloc(sizeof(ChallengeActivity)*(num_challenges));
     CHECK_MEMORY(room->name);
+    room->challenges = malloc(sizeof(ChallengeActivity)*(num_challenges));
     CHECK_MEMORY(room->challenges);
     strcpy(room->name,name);
     if (num_challenges < 1) {
@@ -161,10 +161,19 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
     CHECK_NULL(visitor);
     CHECK_NULL(room);
     int places=0;
-    num_of_free_places_for_level(room,level,&places);
+    printf("visitor_enter_room 1\n");
+    Result checking=num_of_free_places_for_level(room,level,&places);
+    if(checking !=OK){
+        return checking;
+    }
+    printf("visitor_enter_room 2\n");
     if(places < 1) return NO_AVAILABLE_CHALLENGES;
-    if(*visitor->room_name != NULL )
+    printf("visitor_enter_room                          4\n");
+    if(*visitor->room_name != NULL ){
         return ALREADY_IN_ROOM;
+    }
+
+    printf("visitor_enter_room 333333\n");
     ChallengeActivity *ChallengeToVisitor = NULL;
 
     for(int i=0; i< (room->num_of_challenges) ; ++i){
