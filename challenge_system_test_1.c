@@ -27,7 +27,6 @@ int main(int argc, char **argv)
 
    r=visitor_quit(sys, 203, 10);
    ASSERT("1.1" , r==NOT_IN_ROOM)
-   printf("Got here 5\n");
    r=visitor_quit(sys, 201, 9);
    ASSERT("1.2" , r==OK)
 
