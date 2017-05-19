@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		24E16CFA1EBB6E34001FF479 /* challenge_system_test_1.c in Sources */ = {isa = PBXBuildFile; fileRef = 24E16CF11EBB6E34001FF479 /* challenge_system_test_1.c */; };
+		243F2C9F1ECF0D5900197195 /* challenge_system_banch_tests.c in Sources */ = {isa = PBXBuildFile; fileRef = 243F2C9E1ECF0D5900197195 /* challenge_system_banch_tests.c */; };
 		24E16CFB1EBB6E34001FF479 /* challenge_system.c in Sources */ = {isa = PBXBuildFile; fileRef = 24E16CF21EBB6E34001FF479 /* challenge_system.c */; };
 		24E16CFC1EBB6E34001FF479 /* challenge.c in Sources */ = {isa = PBXBuildFile; fileRef = 24E16CF41EBB6E34001FF479 /* challenge.c */; };
 		24E16CFD1EBB6E34001FF479 /* visitor_room.c in Sources */ = {isa = PBXBuildFile; fileRef = 24E16CF81EBB6E34001FF479 /* visitor_room.c */; };
@@ -26,9 +26,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		243F2C9E1ECF0D5900197195 /* challenge_system_banch_tests.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = challenge_system_banch_tests.c; sourceTree = SOURCE_ROOT; };
+		243F2CA01ECF137B00197195 /* challenge_room_system_fields.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = challenge_room_system_fields.h; sourceTree = SOURCE_ROOT; };
 		24E16CC61EBB67A1001FF479 /* hw2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hw2; sourceTree = BUILT_PRODUCTS_DIR; };
-		24E16CF01EBB6E34001FF479 /* challenge_room_system_fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = challenge_room_system_fields.h; sourceTree = SOURCE_ROOT; };
-		24E16CF11EBB6E34001FF479 /* challenge_system_test_1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = challenge_system_test_1.c; sourceTree = SOURCE_ROOT; };
 		24E16CF21EBB6E34001FF479 /* challenge_system.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = challenge_system.c; sourceTree = SOURCE_ROOT; };
 		24E16CF31EBB6E34001FF479 /* challenge_system.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = challenge_system.h; sourceTree = SOURCE_ROOT; };
 		24E16CF41EBB6E34001FF479 /* challenge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = challenge.c; sourceTree = SOURCE_ROOT; };
@@ -69,8 +69,8 @@
 		24E16CC81EBB67A1001FF479 /* hw2 */ = {
 			isa = PBXGroup;
 			children = (
-				24E16CF01EBB6E34001FF479 /* challenge_room_system_fields.h */,
-				24E16CF11EBB6E34001FF479 /* challenge_system_test_1.c */,
+				243F2CA01ECF137B00197195 /* challenge_room_system_fields.h */,
+				243F2C9E1ECF0D5900197195 /* challenge_system_banch_tests.c */,
 				24E16CF21EBB6E34001FF479 /* challenge_system.c */,
 				24E16CF31EBB6E34001FF479 /* challenge_system.h */,
 				24E16CF61EBB6E34001FF479 /* constants.h */,
@@ -140,10 +140,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				243F2C9F1ECF0D5900197195 /* challenge_system_banch_tests.c in Sources */,
 				24E16CFB1EBB6E34001FF479 /* challenge_system.c in Sources */,
 				24E16CFC1EBB6E34001FF479 /* challenge.c in Sources */,
 				24E16CFD1EBB6E34001FF479 /* visitor_room.c in Sources */,
-				24E16CFA1EBB6E34001FF479 /* challenge_system_test_1.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +272,7 @@
 				24E16CCF1EBB67A1001FF479 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
