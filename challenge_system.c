@@ -131,7 +131,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                 // j=i; // not sure if correct...
             }}
 
-//            printf("destroy_system 7 %s %d \n",((*(sys->SysChallenges + j))->name),j);
+//            printf("destroy_system 7 %s %d \n",((*(sys->SysChallenges + j))->name),j).;
             *challenge_best_time = malloc(sizeof(char) *
                                                   (strlen((*(sys->SysChallenges+j))->name)+1));
             if (*challenge_best_time == NULL) return MEMORY_PROBLEM;
