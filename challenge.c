@@ -35,7 +35,11 @@ Result init_challenge(Challenge *challenge, int id, char *name, Level level){
 Result reset_challenge(Challenge *challenge){
     CHECK_NULL(challenge);
     free(challenge->name);
-    memset(challenge, 0, sizeof(*challenge));
+    challenge->name=NULL;
+    challenge->id=0;
+    challenge->best_time=0;
+    challenge->num_visits=0;
+    challenge -> level = Easy;
     return OK;
 }
 
@@ -58,21 +62,11 @@ Result change_name(Challenge *challenge, char *name){
  ***********************************************************************/
 Result set_best_time_of_challenge(Challenge *challenge, int time){
     CHECK_NULL(challenge);
-    if (time < 0){
+    if (time < 0 || (time > challenge->best_time && challenge->best_time!=0)){
         return ILLEGAL_PARAMETER;
     }
-    if((challenge->best_time == 0)&&(time!=0)) {
-        challenge->best_time = time;
-        return OK;
-    }
-    if ((time < challenge->best_time) && (time != 0) ) {
-        challenge->best_time = time;
-        return OK;
-    }
-
-        return OK;
-
-
+    challenge->best_time = time;
+    return OK;
 }
 
 /************************************************************************
@@ -80,9 +74,7 @@ Result set_best_time_of_challenge(Challenge *challenge, int time){
  ***********************************************************************/
 Result best_time_of_challenge(Challenge *challenge, int *time){
     CHECK_NULL(challenge);
-
-        *time = challenge->best_time;
-
+    *time = challenge->best_time;
     return OK;
 }
 
