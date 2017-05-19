@@ -13,6 +13,11 @@
                                 return MEMORY_PROBLEM;\
                                 }
 
+#define CHECK_MEMORY2(ptr1,ptr2) if(ptr1==NULL){\
+                                free(ptr2);\
+                                return MEMORY_PROBLEM;\
+                                }
+
 /************************************************************************
  * inisialise challenge activity to 0                                   *
  ***********************************************************************/
@@ -76,14 +81,15 @@ Result reset_visitor(Visitor *visitor){
 Result init_room(ChallengeRoom *room, char *name, int num_challenges){
     CHECK_NULL(room);
     CHECK_NULL(name);
-    room->name = malloc(sizeof(char)*(strlen(name)+1));
-    CHECK_MEMORY(room->name);
-    room->challenges = malloc(sizeof(ChallengeActivity)*(num_challenges));
-    CHECK_MEMORY(room->challenges);
-    strcpy(room->name,name);
     if (num_challenges < 1) {
         return ILLEGAL_PARAMETER;
     }
+    room->name = malloc(sizeof(char)*(strlen(name)+1));
+    CHECK_MEMORY(room->name);
+    room->challenges = malloc(sizeof(ChallengeActivity)*(num_challenges));
+    CHECK_MEMORY2(room->challenges,room->name);
+    strcpy(room->name,name);
+
     room->num_of_challenges = num_challenges;
     return OK;
 }
