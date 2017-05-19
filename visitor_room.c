@@ -47,7 +47,7 @@ Result reset_challenge_activity(ChallengeActivity *activity){
 
 /************************************************************************
  * inisialise visitor to 0                                              *
- * 11 lines                                                              *
+ * 11 lines                                                             *
  ***********************************************************************/
 Result init_visitor(Visitor *visitor, char *name, int id){
     CHECK_NULL(visitor);
@@ -81,7 +81,7 @@ Result reset_visitor(Visitor *visitor){
 
 /************************************************************************
  * inisialise room to 0                                                 *
- * 11 lines                                                              *
+ * 11 lines                                                             *
  ***********************************************************************/
 Result init_room(ChallengeRoom *room, char *name, int num_challenges){
     CHECK_NULL(room);
@@ -118,7 +118,7 @@ Result reset_room(ChallengeRoom *room){
 
 /************************************************************************
  * return the number of free challenges in room of the given level      *
- * 11 lines                                                              *
+ * 11 lines                                                             *
  ***********************************************************************/
 Result num_of_free_places_for_level(ChallengeRoom *room, Level level,
                                                             int *places){
@@ -170,7 +170,7 @@ Result room_of_visitor(Visitor *visitor, char **room_name){
 /************************************************************************
  * enter visitor to a challenge (with the smaller lexicographic name)   *
  * of a chosen level. if possible                                       *
- * 34 lines                                                              *
+ * 34 lines                                                             *
  ***********************************************************************/
 Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
                                                                 int start_time){
@@ -223,7 +223,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
 
 /************************************************************************
  * visitor leave the room and update all relevant info                  *
- * 12 lines                                                              *
+ * 12 lines                                                             *
  ***********************************************************************/
 Result visitor_quit_room(Visitor *visitor, int quit_time){
     CHECK_NULL(visitor);

@@ -13,7 +13,7 @@
                             }
 /************************************************************************
  * insialise challege struct to 0                                       *
- * 11 lines                                                              *
+ * 11 lines                                                             *
  ***********************************************************************/
 Result init_challenge(Challenge *challenge, int id, char *name, Level level){
     CHECK_NULL(name);
@@ -30,10 +30,10 @@ Result init_challenge(Challenge *challenge, int id, char *name, Level level){
     return OK;
 }
 
-/***********************************************************************
- * reset challege struct to 0                                          *
+/************************************************************************
+ * reset challege struct to 0                                           *
  * 8 lines                                                              *
- **********************************************************************/
+ ***********************************************************************/
 Result reset_challenge(Challenge *challenge){
     CHECK_NULL(challenge);
     free(challenge->name);
