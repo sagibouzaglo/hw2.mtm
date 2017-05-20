@@ -42,38 +42,26 @@
                             free(ptr3);\
                             return Result;\
                             }
-#define CHECK_RESULT_AND_4FREE(Result,ptr1,ptr2,ptr3,ptr4,file) if(Result != OK) {\
-                            fclose(file);\
-                            free(ptr1);\
-                            free(ptr2);\
-                            free(ptr3);\
-                            free(ptr4);\
-                            return Result;\
-                            }
-static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input);/*,
-                               int num_of_room, char* buffer , int challenges_in_room,
-                               int IDs_challenge ,int num_of_challenge);*/
 
-static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input);/*, int num_of_challenge,
-int id_challenge, int level_challenge, char* buffer)*/
+static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input);
 
+static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input);
 
 static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id,
                                                             Node *visitor);
-
 static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
 
 /************************************************************************
  * open the data base file and take the imformation from it             *
+ * 20 lines                                                             *
  ***********************************************************************/
 Result create_system(char *init_file, ChallengeRoomSystem **sys){
     *sys=malloc(sizeof(ChallengeRoomSystem));
     CHECK_MEMORY(*sys);
     ((*sys)->Systime)=0;
-
+    
     char buffer[ROW_LENGTH];
-
     FILE *input;
     input =fopen(init_file, "r");
     CHECK_NULL(input);
@@ -84,30 +72,24 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
 
     strcpy((*sys)->name, buffer);
 
-
-    Result checking_problems=create_all_challenges(*sys , input);//,  num_of_challenge, id_challenge,  level_challenge,  buffer);
+    Result checking_problems=create_all_challenges(*sys , input);
     CHECK_RESULT_AND_2FREE(checking_problems,((*sys)->name),
                                     ((*sys)->SysChallenges),input);
-
-   /*int num_of_room=0;
-    int challenges_in_room=0;
-    int IDs_challenge=0;*/
-
-    checking_problems=create_all_rooms(*sys, input);/*num_of_room, buffer ,
-                            challenges_in_room, IDs_challenge ,num_of_challenge);*/
+    checking_problems=create_all_rooms(*sys, input);
     CHECK_RESULT_AND_3FREE(checking_problems,((*sys)->name),
                             ((*sys)->SysChallenges),((*sys)->SysRooms),input);
-
-
-
     (*sys)->linked_list = NULL;
     fclose(input);
     return OK;
 }
 
+/************************************************************************
+ *             *
+ * 29 lines                                                             *
+ ***********************************************************************/
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
-                                    char **most_popular_challenge_p,
-                                        char **challenge_best_time) {
+                                        char **most_popular_challenge_p,
+                                                char **challenge_best_time) {
     if (destroy_time < ((sys)->Systime))return ILLEGAL_TIME;
     all_visitors_quit(sys, destroy_time);
     int best_time=sys->Systime;
@@ -123,7 +105,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
             best_time_of_system_challenge(sys,
                                           ((*(sys->SysChallenges + i))->name),
                                           &challenge_time);
-            if((challenge_time < best_time) && (challenge_time != 0)){ // added != 0
+            if((challenge_time < best_time) && (challenge_time != 0)){
                 best_time = challenge_time;
                 j=i;
 
@@ -133,18 +115,12 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                         best_time = challenge_time;
                         j=i;
                     }
-     //       }else{
-       //
-                // j=i; // not sure if correct...
-            }}
-
-//            printf("destroy_system 7 %s %d \n",((*(sys->SysChallenges + j))->name),j).;
+            }
+        }
             *challenge_best_time = malloc(sizeof(char) *
-                                                  (strlen((*(sys->SysChallenges+j))->name)+1));
+                                   (strlen((*(sys->SysChallenges+j))->name)+1));
             if (*challenge_best_time == NULL) return MEMORY_PROBLEM;
             strcpy(*challenge_best_time,((*(sys->SysChallenges + j))->name));
-
-
     }
     Result check = reset_all_rooms(sys);
     if (check != OK) return check;
@@ -153,6 +129,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
 
 /************************************************************************
  *                    *
+ * 34 lines
  ***********************************************************************/
 Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
                                 char *visitor_name, int visitor_id,
@@ -161,7 +138,7 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
     if ((visitor_name == NULL)||(room_name == NULL)){
         return ILLEGAL_PARAMETER;
     }
-    if(start_time < sys->Systime) {
+    if(start_time < sys->Systime){
         return ILLEGAL_TIME;
     }
 
@@ -178,11 +155,9 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
             break;
         }
     }
-
     if(room == NULL){
         return ILLEGAL_PARAMETER;
     }
-
     Visitor *visitor=malloc(sizeof(Visitor));
     CHECK_MEMORY(visitor);
     Result checking_problems= init_visitor(visitor,visitor_name,visitor_id);
@@ -190,7 +165,6 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
     if (checking_problems != OK){
         return checking_problems;
     }
-
     checking_problems=visitor_enter_room(room,visitor,level,start_time);
     if (checking_problems != OK){
         return checking_problems;
@@ -200,18 +174,9 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
     if(!node2) return MEMORY_PROBLEM;
     node2->visitor=visitor;
     node2->next=NULL;
-
-    /*if(sys->linked_list==NULL){
-        sys->linked_list=node2;
-        sys->linked_list->next=NULL;
-        printf("arri -if %s\n",node2->visitor->visitor_name );
-    } else*/{
-
-        node2->next = first_visitor;
-        first_visitor=node2;
-        sys->linked_list=first_visitor;
-    }
-
+    node2->next = first_visitor;
+    first_visitor=node2;
+    sys->linked_list=first_visitor;
     CHECK_MEMORY(node2);
     sys->Systime=start_time;
     return  OK;
@@ -221,25 +186,20 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
 /************************************************************************
  * visitor is exiting the room and saving his best time.                *
  * alse the system realese memory and change the linked list            *
+ *  22 lines                                                            *
  ***********************************************************************/
 Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
     CHECK_NULL(sys);
     if (((quit_time < 0)||(quit_time < (sys->Systime))) ) return ILLEGAL_TIME;
     Node tmp_node1 = sys -> linked_list;
-    /*if(sys->linked_list->next==NULL){
-        if((tmp_node1->visitor->visitor_id) != visitor_id)return NOT_IN_ROOM;
-  }*/
-     Node previous = NULL;
-    //if (tmp_node1 == NULL){
-     //   return NOT_IN_ROOM;
-    //}
+    Node previous = NULL;
+
     while(tmp_node1 != NULL) {
         if((tmp_node1->visitor->visitor_id) != visitor_id) {
             previous = tmp_node1;
             tmp_node1 = tmp_node1->next;
         }
         else{
-            //if(tmp_node1->next!= NULL){
             if(previous != NULL){
                 previous->next = tmp_node1->next;
             }
@@ -252,7 +212,6 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
             if(checking_problems != OK)return checking_problems;
             checking_problems = reset_visitor(tmp_node1->visitor);
             if(checking_problems != OK)return checking_problems;
-            free(tmp_node1->visitor);
             free(tmp_node1);
             sys->Systime=quit_time;
             return OK;
@@ -266,6 +225,7 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
 /************************************************************************
  * using "visitor quit" to exit all visitors from the system and        *
  * release the memory                                                   *
+ * 21 lines                                                             *
  ***********************************************************************/
 Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time){
     CHECK_NULL(sys);
@@ -291,6 +251,7 @@ Result all_visitors_quit(ChallengeRoomSystem *sys, int quit_time){
 
 /************************************************************************
  * using "room_of_visitor" to find the room the visitr is staying in    *
+ * 19 lines                                                             *
  ***********************************************************************/
 Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name,
                                                             char **room_name) {
@@ -319,23 +280,10 @@ Result system_room_of_visitor(ChallengeRoomSystem *sys, char *visitor_name,
     }
     return NOT_IN_ROOM;
 }
-    /*Node tmp_node=malloc(sizeof(Node));
-    CHECK_MEMORY(tmp_node);
-    printf("room of vis SYS 1\n");
-    tmp_node->next = sys->linked_list;
-    sys->linked_list=tmp_node;
-    printf("room of vis SYS 2\n");
-    while(strcmp((sys->linked_list->visitor->visitor_name),visitor_name)!= 0){
-        tmp_node->next=sys->linked_list->next;
-        if (sys->linked_list->next == NULL){
-            return NOT_IN_ROOM;
-        }
-    }
-    if (room_of_visitor(tmp_node->visitor,room_name)==NOT_IN_ROOM){
-        return NOT_IN_ROOM; */
 
 /************************************************************************
  * finding the relevant challenge and change it's name                  *
+ * 9 lines                                                              *
  ***********************************************************************/
 Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id,
                                                                 char *new_name){
@@ -354,6 +302,7 @@ Result change_challenge_name(ChallengeRoomSystem *sys, int challenge_id,
 
 /************************************************************************
  * finding the relevant room and change it's name                       *
+ * 9 lines                                                              *
  ***********************************************************************/
 Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name,
                                                                 char *new_name){
@@ -372,6 +321,7 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name,
 
 /************************************************************************
  *                    *
+ * 12 lines                                                             *
  ***********************************************************************/
 Result best_time_of_system_challenge(ChallengeRoomSystem *sys,
                                             char *challenge_name, int *time){
@@ -395,6 +345,7 @@ Result best_time_of_system_challenge(ChallengeRoomSystem *sys,
 
 /************************************************************************
  *                           *
+ * 22 lines                                                             *
  ***********************************************************************/
 Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
     CHECK_NULL(sys);
@@ -428,23 +379,22 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
 }
 /************************************************************************
  *                           *
+ * 6 lines                                                              *
  ***********************************************************************/
 static Result reset_all_rooms(ChallengeRoomSystem *sys){
     CHECK_NULL(sys);
     Result check;
     for(int i =0; i<((sys)->Sys_num_of_rooms) ; ++i){
-        check=reset_room(*(sys->SysRooms + i));
-
+        check=reset_room(*(((sys)->SysRooms)+i));
         if(check != OK) return check;
         }
     return OK;
     }
 /************************************************************************
  *                           *
+ * 29 lines                                                             *
  ***********************************************************************/
-static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input)/*,
-                               int num_of_room, char* buffer , int challenges_in_room,
-                               int IDs_challenge ,int num_of_challenge)*/
+static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input)
 {
     int num_of_room=0;
     int challenges_in_room=0;
@@ -472,14 +422,9 @@ static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input)/*,
                     checking_problems=init_challenge_activity(
                                         ((*((sys)->SysRooms+i))->challenges +j),
                                                    (*((sys)->SysChallenges+k)));
-                    if(checking_problems!=OK){
-                        for(int n=i; n>=0 ;--n){
-                            free((*(sys)->SysRooms+n)->name);
-                        }
-                    }
-                    CHECK_RESULT_AND_4FREE(checking_problems,((sys)->name),
+                    CHECK_RESULT_AND_3FREE(checking_problems,((sys)->name),
                                            (*(sys)->SysChallenges),
-                                            (*(sys)->SysRooms),((*sys->SysRooms+i)->name),input);
+                                            (*(sys)->SysRooms),input);
 
                 }
             }
@@ -490,9 +435,9 @@ static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input)/*,
 
 /************************************************************************
  *                           *
+ * 20 lines                                                             *
  ***********************************************************************/
-static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input)/*, int num_of_challenge,
-int id_challenge, int level_challenge, char* buffer)*/
+static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input)
 {
     char buffer[ROW_LENGTH];
     int num_of_challenge = 0;
@@ -521,6 +466,7 @@ int id_challenge, int level_challenge, char* buffer)*/
 
 /************************************************************************
  *                           *
+ * 14 lines                                                             *
  ***********************************************************************/
 static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id, Node *nod2) {
     CHECK_NULL (sys);
