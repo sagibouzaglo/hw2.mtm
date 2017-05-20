@@ -42,7 +42,14 @@
                             free(ptr3);\
                             return Result;\
                             }
-
+#define CHECK_RESULT_AND_4FREE(Result,ptr1,ptr2,ptr3,ptr4,file) if(Result != OK) {\
+                            fclose(file);\
+                            free(ptr1);\
+                            free(ptr2);\
+                            free(ptr3);\
+                            free(ptr4);\
+                            return Result;\
+                            }
 static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input);/*,
                                int num_of_room, char* buffer , int challenges_in_room,
                                int IDs_challenge ,int num_of_challenge);*/
@@ -245,6 +252,7 @@ Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
             if(checking_problems != OK)return checking_problems;
             checking_problems = reset_visitor(tmp_node1->visitor);
             if(checking_problems != OK)return checking_problems;
+            free(tmp_node1->visitor);
             free(tmp_node1);
             sys->Systime=quit_time;
             return OK;
@@ -425,7 +433,8 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys){
     CHECK_NULL(sys);
     Result check;
     for(int i =0; i<((sys)->Sys_num_of_rooms) ; ++i){
-        check=reset_room(*(((sys)->SysRooms)+i));
+        check=reset_room(*(sys->SysRooms + i));
+
         if(check != OK) return check;
         }
     return OK;
@@ -463,9 +472,14 @@ static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input)/*,
                     checking_problems=init_challenge_activity(
                                         ((*((sys)->SysRooms+i))->challenges +j),
                                                    (*((sys)->SysChallenges+k)));
-                    CHECK_RESULT_AND_3FREE(checking_problems,((sys)->name),
+                    if(checking_problems!=OK){
+                        for(int n=i; n>=0 ;--n){
+                            free((*(sys)->SysRooms+n)->name);
+                        }
+                    }
+                    CHECK_RESULT_AND_4FREE(checking_problems,((sys)->name),
                                            (*(sys)->SysChallenges),
-                                            (*(sys)->SysRooms),input);
+                                            (*(sys)->SysRooms),((*sys->SysRooms+i)->name),input);
 
                 }
             }
