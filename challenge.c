@@ -13,14 +13,13 @@
                             }
 /************************************************************************
  * insialise challege struct to 0                                       *
- * 11 lines                                                             *
+ * 12 lines                                                             *
  ***********************************************************************/
 Result init_challenge(Challenge *challenge, int id, char *name, Level level){
     CHECK_NULL(name);
     CHECK_NULL(challenge);
     char* name_copy = malloc((strlen(name)+1)*sizeof(char));
     CHECK_MEMORY(name_copy);
-    
     memcpy(name_copy, name, (strlen(name)+1));
     challenge->id = id;
     challenge->level = level;
@@ -32,7 +31,7 @@ Result init_challenge(Challenge *challenge, int id, char *name, Level level){
 
 /************************************************************************
  * reset challege struct to 0                                           *
- * 8 lines                                                              *
+ * 9 lines                                                              *
  ***********************************************************************/
 Result reset_challenge(Challenge *challenge){
     CHECK_NULL(challenge);
@@ -47,7 +46,7 @@ Result reset_challenge(Challenge *challenge){
 
 /************************************************************************
  * changing the name of challenge                                       *
- * 8 lines                                                              *
+ * 9 lines                                                              *
  ***********************************************************************/
 Result change_name(Challenge *challenge, char *name){
     CHECK_NULL(challenge);
@@ -62,7 +61,7 @@ Result change_name(Challenge *challenge, char *name){
 
 /************************************************************************
  * set best time for challenge                                          *
- * 5 lines                                                              *
+ * 7 lines                                                              *
  ***********************************************************************/
 Result set_best_time_of_challenge(Challenge *challenge, int time){
     CHECK_NULL(challenge);
@@ -75,7 +74,7 @@ Result set_best_time_of_challenge(Challenge *challenge, int time){
 
 /************************************************************************
  * return the best time for a challenge                                 *
- * 3 lines                                                              *
+ * 4 lines                                                              *
  ***********************************************************************/
 Result best_time_of_challenge(Challenge *challenge, int *time){
     CHECK_NULL(challenge);
@@ -85,7 +84,7 @@ Result best_time_of_challenge(Challenge *challenge, int *time){
 
 /************************************************************************
  * add +1 to visitors count                                             *
- * 3 lines                                                              *
+ * 4 lines                                                              *
  ***********************************************************************/
 Result inc_num_visits(Challenge *challenge){
     CHECK_NULL(challenge);
@@ -95,7 +94,7 @@ Result inc_num_visits(Challenge *challenge){
 
 /************************************************************************
  * return visits amount                                                 *
- * 3 lines                                                              *
+ * 4 lines                                                              *
  ***********************************************************************/
 Result num_visits(Challenge *challenge, int *visits){
     CHECK_NULL(challenge);
