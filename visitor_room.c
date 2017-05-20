@@ -73,7 +73,6 @@ Result reset_visitor(Visitor *visitor){
     free(visitor->visitor_name);
     free(visitor->room_name);
     visitor->room_name = NULL;
-
     return OK;
 }
 
@@ -98,7 +97,7 @@ Result init_room(ChallengeRoom *room, char *name, int num_challenges){
 
 /************************************************************************
  * reset room to 0                                                      *
- * 10 lines                                                              *
+ * 10 lines                                                             *
  ***********************************************************************/
 Result reset_room(ChallengeRoom *room){
     CHECK_NULL(room);
@@ -118,7 +117,7 @@ Result reset_room(ChallengeRoom *room){
  ***********************************************************************/
 Result num_of_free_places_for_level(ChallengeRoom *room, Level level,
                                                             int *places){
-   CHECK_NULL(room);
+    CHECK_NULL(room);
     int counter = 0;
     for(int i=0; i < (room->num_of_challenges) ; ++i){
         if ((room->challenges + i)->visitor == NULL){
@@ -126,8 +125,7 @@ Result num_of_free_places_for_level(ChallengeRoom *room, Level level,
                 if(((room->challenges+i))->challenge->level==level){
                     ++counter;
                 }
-            }
-            else {
+            }else {
                 counter++;
             }
         }
@@ -138,7 +136,7 @@ Result num_of_free_places_for_level(ChallengeRoom *room, Level level,
 
 /************************************************************************
  * change the room name                                                 *
- * 7 lines                                                              *
+ * 8 lines                                                              *
  ***********************************************************************/
 Result change_room_name(ChallengeRoom *room, char *new_name){
     CHECK_NULL(room);
@@ -152,7 +150,7 @@ Result change_room_name(ChallengeRoom *room, char *new_name){
 
 /************************************************************************
  * find the room of given visitor                                       *
- * 9 lines                                                              *
+ * 10 lines                                                             *
  ***********************************************************************/
 Result room_of_visitor(Visitor *visitor, char **room_name){
     CHECK_NULL(visitor);
@@ -169,7 +167,7 @@ Result room_of_visitor(Visitor *visitor, char **room_name){
 /************************************************************************
  * enter visitor to a challenge (with the smaller lexicographic name)   *
  * of a chosen level. if possible                                       *
- * 45 lines                                                             *
+ * 44 lines                                                             *
  ***********************************************************************/
 Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
                                                                 int start_time){
@@ -199,8 +197,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
                     ChallengeToVisitor = (room->challenges + i);
                 }
             }
-        }
-        else{
+        }else{
             if(ChallengeToVisitor == NULL ||
                                 strcmp((room->challenges+i)->challenge->name,
                                        ChallengeToVisitor->challenge->name)<0){
@@ -208,21 +205,21 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
             }
         }
     }
-    if(ChallengeToVisitor == NULL)
+    if(ChallengeToVisitor == NULL){
         return NO_AVAILABLE_CHALLENGES;
+    }
     ChallengeToVisitor->visitor=visitor;
     ChallengeToVisitor->start_time=start_time;
     *(visitor->room_name)=room->name;
     visitor->current_challenge=ChallengeToVisitor;
     visitor->current_challenge->start_time=start_time;
     ChallengeToVisitor->challenge->num_visits++;
-
     return OK;
 }
 
 /************************************************************************
  * visitor leave the room and update all relevant info                  *
- * 14 lines                                                             *
+ * 16 lines                                                             *
  ***********************************************************************/
 Result visitor_quit_room(Visitor *visitor, int quit_time){
     CHECK_NULL(visitor);

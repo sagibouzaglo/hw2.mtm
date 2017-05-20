@@ -55,12 +55,17 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys);
 
 /************************************************************************
  * open the data base file and take the imformation from it             *
- * 20 lines                                                             *
+ * 25 lines                                                             *
  ***********************************************************************/
 Result create_system(char *init_file, ChallengeRoomSystem **sys){
     *sys=malloc(sizeof(ChallengeRoomSystem));
     CHECK_MEMORY(*sys);
     ((*sys)->Systime)=0;
+    (*sys)->linked_list = NULL;
+    (*sys)->SysChallenges=NULL;
+    (*sys)->SysRooms=NULL;
+    (*sys)->Sysnum_of_challenges=0;
+    (*sys)->Sys_num_of_rooms=0;
     char buffer[ROW_LENGTH];
     FILE *input;
     input =fopen(init_file, "r");
@@ -82,7 +87,7 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
 
 /************************************************************************
  *             *
- * 40 lines                                                             *
+ * 44 lines                                                             *
  ***********************************************************************/
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
                                         char **most_popular_challenge_p,
@@ -123,15 +128,19 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
         strcpy(*challenge_best_time,((*(sys->SysChallenges + j))->name));
     }
     Result check = reset_all_rooms(sys);
-    if (check != OK){
-        return check;
-    }
+    if (check != OK) return check;
+    check = reset_all_challenges(sys);
+    if (check != OK) return check;
+    free(sys->SysChallenges);
+    free(sys->SysRooms);
+    free(sys->name);
+    free(sys);
     return OK;
 }
 
 /************************************************************************
  *                    *
- * 45 lines
+ * 50 lines
  ***********************************************************************/
 Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
                                 char *visitor_name, int visitor_id,
@@ -146,7 +155,6 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
     Node first_visitor = sys->linked_list;
     Node node3 = NULL;
     find_visitor(sys,visitor_id,&node3);
-    //if (find_visitor(sys,visitor_id,&node3) != NOT_IN_ROOM) {
     if (node3 != NULL) {
         return ALREADY_IN_ROOM;
     }
@@ -163,7 +171,6 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
     Visitor *visitor=malloc(sizeof(Visitor));
     CHECK_MEMORY(visitor);
     Result checking_problems= init_visitor(visitor,visitor_name,visitor_id);
-
     if (checking_problems != OK){
         reset_visitor(visitor);
         free(visitor);
@@ -176,7 +183,9 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
         return checking_problems;
     }
     Node node2 = malloc(sizeof(*node2));
-    if(!node2){
+    if(!node2) {
+        reset_visitor(visitor);
+        free(visitor);
         return MEMORY_PROBLEM;
     }
     node2->visitor=visitor;
@@ -184,7 +193,6 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
     node2->next = first_visitor;
     first_visitor=node2;
     sys->linked_list=first_visitor;
-
     sys->Systime=start_time;
     return  OK;
 }
@@ -192,7 +200,7 @@ Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
 /************************************************************************
  * visitor is exiting the room and saving his best time.                *
  * alse the system realese memory and change the linked list            *
- *  32 lines                                                            *
+ *  33 lines                                                            *
  ***********************************************************************/
 Result visitor_quit(ChallengeRoomSystem *sys, int visitor_id, int quit_time){
     CHECK_NULL(sys);
@@ -394,10 +402,27 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys){
         if(check != OK){
             return check;
         }
+        free((*(((sys)->SysRooms)+i)));
     }
     return OK;
 }
 
+/************************************************************************
+ *                           *
+ * 11 lines                                                              *
+ ***********************************************************************/
+static Result reset_all_challenges(ChallengeRoomSystem *sys){
+    CHECK_NULL(sys);
+    Result check;
+    for(int i =0; i<((sys)->Sysnum_of_challenges) ; ++i){
+        check=reset_challenge(*(((sys)->SysChallenges)+i));
+        if(check != OK){
+            return check;
+        }
+        free((*(((sys)->SysChallenges)+i)));
+    }
+    return OK;
+}
 /************************************************************************
  *                           *
  * 33 lines                                                             *
@@ -468,14 +493,14 @@ static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input){
 
 /************************************************************************
  *                           *
- * 18 lines                                                             *
+ * 17 lines                                                             *
  ***********************************************************************/
 static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id, Node *nod2){
     CHECK_NULL (sys);
-    if (sys->linked_list == NULL){
+    Node ptr = sys->linked_list;
+    if (ptr == NULL){
         return NOT_IN_ROOM;
     }
-
     while(ptr != NULL) {
         if (ptr->visitor != NULL && ptr->visitor->visitor_id == visitor_id ){
             *nod2=ptr;
