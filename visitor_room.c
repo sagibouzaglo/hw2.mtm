@@ -233,18 +233,13 @@ Result visitor_quit_room(Visitor *visitor, int quit_time){
     int total_time=(quit_time - (visitor->current_challenge->start_time));
     set_best_time_of_challenge(visitor->current_challenge->challenge,
                                                                 total_time);
-
     Result checking =init_challenge_activity(visitor->current_challenge,
                                         visitor->current_challenge->challenge);
     if(checking != OK){
         return checking;
     }
-
-
     visitor->current_challenge->visitor=NULL;
     *visitor->room_name=NULL;
-
-    
     return OK;
 }
 
