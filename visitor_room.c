@@ -71,8 +71,9 @@ Result reset_visitor(Visitor *visitor){
     visitor->visitor_id = 0;
     visitor->current_challenge = NULL;
     free(visitor->visitor_name);
+    free(visitor->room_name);
     visitor->room_name = NULL;
-    free(visitor);
+
     return OK;
 }
 
@@ -142,6 +143,7 @@ Result num_of_free_places_for_level(ChallengeRoom *room, Level level,
 Result change_room_name(ChallengeRoom *room, char *new_name){
     CHECK_NULL(room);
     CHECK_NULL(new_name);
+    free(room->name);
     room->name = malloc(sizeof(char)*(strlen(new_name)+1));
     CHECK_MEMORY(room->name);
     strcpy( room->name,new_name);
