@@ -86,7 +86,8 @@ Result create_system(char *init_file, ChallengeRoomSystem **sys){
 }
 
 /************************************************************************
- *             *
+ * find the most popular challenge and the best time for it             *
+ * free all the allocated memory for the system                         *
  * 44 lines                                                             *
  ***********************************************************************/
 Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
@@ -96,6 +97,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
         return ILLEGAL_TIME;
     }
     all_visitors_quit(sys, destroy_time);
+    //find the best time
     int best_time=sys->Systime;
     most_popular_challenge(sys, most_popular_challenge_p);
     if (*most_popular_challenge_p == NULL) {
@@ -127,6 +129,7 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
         }
         strcpy(*challenge_best_time,((*(sys->SysChallenges + j))->name));
     }
+    //free all allocated memory
     Result check = reset_all_rooms(sys);
     if (check != OK) return check;
     check = reset_all_challenges(sys);
@@ -139,8 +142,10 @@ Result destroy_system(ChallengeRoomSystem *sys, int destroy_time,
 }
 
 /************************************************************************
- *                    *
- * 50 lines
+ *  checking that the visitor is not already in the system.             *
+ * allocate memory for the entering visitor and inisialise it.          *
+ * if all went well, visitor will enter a room.                         *
+ * 50 lines                                                             *
  ***********************************************************************/
 Result visitor_arrive(ChallengeRoomSystem *sys, char *room_name,
                                 char *visitor_name, int visitor_id,
@@ -333,7 +338,7 @@ Result change_system_room_name(ChallengeRoomSystem *sys, char *current_name,
 }
 
 /************************************************************************
- *                    *
+ * find the best tome for a given challenge name                        *
  * 16 lines                                                             *
  ***********************************************************************/
 Result best_time_of_system_challenge(ChallengeRoomSystem *sys,
@@ -357,7 +362,7 @@ Result best_time_of_system_challenge(ChallengeRoomSystem *sys,
 }
 
 /************************************************************************
- *                           *
+ * find the most popular challenge (most visited)                       *
  * 27 lines                                                             *
  ***********************************************************************/
 Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
@@ -391,7 +396,7 @@ Result most_popular_challenge(ChallengeRoomSystem *sys, char **challenge_name){
 }
 
 /************************************************************************
- *                           *
+ * free all the allocated memory for the rooms                          *
  * 10 lines                                                             *
  ***********************************************************************/
 static Result reset_all_rooms(ChallengeRoomSystem *sys){
@@ -408,8 +413,8 @@ static Result reset_all_rooms(ChallengeRoomSystem *sys){
 }
 
 /************************************************************************
- *                           *
- * 11 lines                                                              *
+ * free all the allocated memory for the challenges                     *
+ * 11 lines                                                             *
  ***********************************************************************/
 static Result reset_all_challenges(ChallengeRoomSystem *sys){
     CHECK_NULL(sys);
@@ -423,8 +428,10 @@ static Result reset_all_challenges(ChallengeRoomSystem *sys){
     }
     return OK;
 }
+
 /************************************************************************
- *                           *
+ * allocate memory for all the rooms in the system and inisialise them  *
+ * from a file                                                          *
  * 33 lines                                                             *
  ***********************************************************************/
 static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input){
@@ -464,7 +471,8 @@ static Result create_all_rooms(ChallengeRoomSystem *sys, FILE* input){
 }
 
 /************************************************************************
- *                           *
+ * allocate memory for all the challlenges in the system and inisialise *
+ * them from a file                                                     *
  * 21 lines                                                             *
  ***********************************************************************/
 static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input){
@@ -492,7 +500,7 @@ static Result create_all_challenges(ChallengeRoomSystem *sys,FILE* input){
 }
 
 /************************************************************************
- *                           *
+ * find the linked list node for a visitor id                           *
  * 17 lines                                                             *
  ***********************************************************************/
 static Result find_visitor(ChallengeRoomSystem *sys,int visitor_id, Node *nod2){

@@ -174,6 +174,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
     CHECK_NULL(visitor);
     CHECK_NULL(room);
     int places=0;
+    // checking if the visitor can enter the room
     Result checking=num_of_free_places_for_level(room,level,&places);
     if(checking !=OK){
         return checking;
@@ -185,6 +186,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
         return NO_AVAILABLE_CHALLENGES;
     }
     ChallengeActivity *ChallengeToVisitor = NULL;
+    // finding challenge in the room for the visitor
     for(int i=0; i< (room->num_of_challenges) ; ++i){
         if((room->challenges+i)->visitor != NULL) {
             continue;
@@ -208,6 +210,7 @@ Result visitor_enter_room(ChallengeRoom *room, Visitor *visitor, Level level,
     if(ChallengeToVisitor == NULL){
         return NO_AVAILABLE_CHALLENGES;
     }
+    // updating all the new information in visitor
     ChallengeToVisitor->visitor=visitor;
     ChallengeToVisitor->start_time=start_time;
     *(visitor->room_name)=room->name;
